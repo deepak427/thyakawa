@@ -223,9 +223,19 @@ npx tsx prisma/seed-test.ts
 npx prisma studio
 ```
 
+## 🚀 Deployment
+
+Deploy to Vercel in 10 minutes:
+- **Checklist:** [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) - Step-by-step checklist
+- **Quick Start:** [DEPLOYMENT_QUICK_START.md](./DEPLOYMENT_QUICK_START.md) - 10-minute guide
+- **Full Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md) - Complete documentation
+- **Troubleshooting:** [DEPLOYMENT_TROUBLESHOOTING.md](./DEPLOYMENT_TROUBLESHOOTING.md) - Fix common issues
+
 ## 📚 Documentation
 
+- [Getting Started](./GETTING_STARTED.md) - Complete setup guide
 - [Test Credentials](./TEST_CREDENTIALS.md) - All test user logins and workflow guide
+- [Deployment Guide](./DEPLOYMENT.md) - Deploy to Vercel
 - Database Schema - Click the floating DB icon on any page in the app
 
 ## 🐛 Troubleshooting
