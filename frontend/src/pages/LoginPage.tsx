@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { LoadingSpinner } from '../components';
+import { DatabaseSchemaViewer } from '../components/DatabaseSchemaViewer';
+import { Logo } from '../components/Logo';
 import { Role } from '../types';
 import api from '../services/api';
 
@@ -148,7 +150,10 @@ const LoginPage: React.FC = () => {
 
       <div className="max-w-md w-full glass-panel rounded-2xl p-8 relative z-10 animate-fade-in">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary-900 mb-2">Welcome Back</h1>
+          <div className="flex justify-center mb-4">
+            <Logo size="lg" showText={true} />
+          </div>
+          <h1 className="text-3xl font-bold text-primary-900 mb-2">Welcome Back</h1>
           <p className="text-secondary-500">
             {step === 'otp' ? 'Verify your phone number' : 'Login to your account'}
           </p>
@@ -327,6 +332,9 @@ const LoginPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Database Schema Viewer */}
+      <DatabaseSchemaViewer tables={['User', 'AuthOTP']} />
     </div>
   );
 };
