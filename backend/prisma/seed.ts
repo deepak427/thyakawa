@@ -4,169 +4,145 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Starting database seed...');
+  console.log('🧹 Cleaning database...');
+  
+  // Delete all data in correct order (respecting foreign keys)
+  await prisma.oTP.deleteMany();
+  await prisma.authOTP.deleteMany();
+  await prisma.payout.deleteMany();
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.trip.deleteMany();
+  await prisma.transaction.deleteMany();
+  await prisma.wallet.deleteMany();
+  await prisma.address.deleteMany();
+  await prisma.timeslot.deleteMany();
+  await prisma.center.deleteMany();
+  await prisma.service.deleteMany();
+  await prisma.user.deleteMany();
 
-  // Hash password for all users
-  const password = 'password123';
+  console.log('✅ Database cleaned');
+  console.log('🌱 Seeding test users...');
+
+  const password = 'test123';
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // Create users
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@ironing.com' },
-    update: {},
-    create: {
+  // 1. Admin User
+  const admin = await prisma.user.create({
+    data: {
       name: 'Admin User',
-      email: 'admin@ironing.com',
-      phone: '+1234567890',
+      email: 'admin@test.com',
+      phone: '1111111111',
       passwordHash,
       role: Role.ADMIN,
+      referralCode: 'ADMIN001',
     },
   });
-  console.log('Created admin user:', adminUser.email);
+  console.log('✅ Created Admin:', admin.email);
 
-  const regularUser = await prisma.user.upsert({
-    where: { email: 'user@example.com' },
-    update: {},
-    create: {
-      name: 'John Doe',
-      email: 'user@example.com',
-      phone: '+1234567891',
+  // 2. Floor Manager
+  const manager = await prisma.user.create({
+    data: {
+      name: 'Manager User',
+      email: 'manager@test.com',
+      phone: '2222222222',
+      passwordHash,
+      role: Role.FLOOR_MANAGER,
+      referralCode: 'MGR001',
+    },
+  });
+  console.log('✅ Created Manager:', manager.email);
+
+  // 3. Center Operator
+  const operator = await prisma.user.create({
+    data: {
+      name: 'Operator User',
+      email: 'operator@test.com',
+      phone: '3333333333',
+      passwordHash,
+      role: Role.CENTER_OPERATOR,
+      referralCode: 'OPR001',
+    },
+  });
+  console.log('✅ Created Operator:', operator.email);
+
+  // 4. Delivery Person
+  const delivery = await prisma.user.create({
+    data: {
+      name: 'Delivery User',
+      email: 'delivery@test.com',
+      phone: '4444444444',
+      passwordHash,
+      role: Role.DELIVERY_PERSON,
+      referralCode: 'DEL001',
+    },
+  });
+  console.log('✅ Created Delivery Person:', delivery.email);
+
+  // 5. Regular Customer
+  const customer = await prisma.user.create({
+    data: {
+      name: 'Customer User',
+      email: 'customer@test.com',
+      phone: '5555555555',
       passwordHash,
       role: Role.USER,
+      referralCode: 'CUST001',
       wallet: {
         create: {
-          balanceCents: 50000, // $500 initial balance
+          balanceCents: 100000, // ₹1000
         },
       },
       addresses: {
         create: {
           label: 'Home',
-          line1: '123 Main Street',
-          city: 'New York',
-          pincode: '10001',
-          lat: 40.7128,
-          lng: -74.0060,
+          line1: '123 Test Street, Apt 4B',
+          city: 'Mumbai',
+          pincode: '400001',
+          lat: 19.0760,
+          lng: 72.8777,
         },
       },
     },
   });
-  console.log('Created regular user:', regularUser.email);
+  console.log('✅ Created Customer:', customer.email);
 
-  const deliveryPerson = await prisma.user.upsert({
-    where: { email: 'delivery@ironing.com' },
-    update: {},
-    create: {
-      name: 'Delivery Person',
-      email: 'delivery@ironing.com',
-      phone: '+1234567892',
-      passwordHash,
-      role: Role.DELIVERY_PERSON,
+  // Create a center for testing
+  const center = await prisma.center.create({
+    data: {
+      name: 'Mumbai Central',
+      address: '456 Processing Lane, Mumbai',
     },
   });
-  console.log('Created delivery person:', deliveryPerson.email);
+  console.log('✅ Created Center:', center.name);
 
-  const floorManager = await prisma.user.upsert({
-    where: { email: 'manager@ironing.com' },
-    update: {},
-    create: {
-      name: 'Floor Manager',
-      email: 'manager@ironing.com',
-      phone: '+1234567893',
-      passwordHash,
-      role: Role.FLOOR_MANAGER,
-    },
+  // Create basic services
+  const services = await prisma.service.createMany({
+    data: [
+      { name: 'Shirt', basePriceCents: 3000 }, // ₹30
+      { name: 'Trouser', basePriceCents: 4000 }, // ₹40
+      { name: 'Saree', basePriceCents: 6000 }, // ₹60
+      { name: 'Bedsheet', basePriceCents: 5000 }, // ₹50
+    ],
   });
-  console.log('Created floor manager:', floorManager.email);
+  console.log('✅ Created Services:', services.count);
 
-  // Create center
-  const center = await prisma.center.upsert({
-    where: { id: 'default-center-id' },
-    update: {},
-    create: {
-      id: 'default-center-id',
-      name: 'Downtown Ironing Center',
-      address: '456 Business Ave, New York, NY 10002',
-    },
-  });
-  console.log('Created center:', center.name);
-
-  // Create services
-  const shirtService = await prisma.service.upsert({
-    where: { id: 'service-shirt' },
-    update: {},
-    create: {
-      id: 'service-shirt',
-      name: 'Shirt',
-      basePriceCents: 500, // $5.00
-    },
-  });
-  console.log('Created service:', shirtService.name);
-
-  const pantsService = await prisma.service.upsert({
-    where: { id: 'service-pants' },
-    update: {},
-    create: {
-      id: 'service-pants',
-      name: 'Pants',
-      basePriceCents: 700, // $7.00
-    },
-  });
-  console.log('Created service:', pantsService.name);
-
-  const dressService = await prisma.service.upsert({
-    where: { id: 'service-dress' },
-    update: {},
-    create: {
-      id: 'service-dress',
-      name: 'Dress',
-      basePriceCents: 1200, // $12.00
-    },
-  });
-  console.log('Created service:', dressService.name);
-
-  // Create timeslots for next 5 days
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const timeSlots = [
-    { startTime: '09:00', endTime: '11:00' },
-    { startTime: '11:00', endTime: '13:00' },
-  ];
-
-  let timeslotCount = 0;
-  for (let day = 0; day < 5; day++) {
-    const date = new Date(today);
-    date.setDate(date.getDate() + day);
-
-    for (const slot of timeSlots) {
-      await prisma.timeslot.create({
-        data: {
-          centerId: center.id,
-          date,
-          startTime: slot.startTime,
-          endTime: slot.endTime,
-          capacity: 10,
-          remainingCapacity: 10,
-        },
-      });
-      timeslotCount++;
-    }
-  }
-  console.log(`Created ${timeslotCount} timeslots for next 5 days`);
-
-  console.log('\n✅ Seed completed successfully!');
-  console.log('\n🔑 Default credentials (all users):');
-  console.log('Password: password123');
-  console.log('\n👥 User accounts:');
-  console.log('- Admin: admin@ironing.com (Settings & User Management)');
-  console.log('- Floor Manager: manager@ironing.com (Trip & Operations Management)');
-  console.log('- Delivery Person: delivery@ironing.com');
-  console.log('- Customer: user@example.com');
+  console.log('\n🎉 Database seeded successfully!');
+  console.log('\n📋 Test Credentials:');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('All users have password: test123');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('Admin:     admin@test.com     | 1111111111');
+  console.log('Manager:   manager@test.com   | 2222222222');
+  console.log('Operator:  operator@test.com  | 3333333333');
+  console.log('Delivery:  delivery@test.com  | 4444444444');
+  console.log('Customer:  customer@test.com  | 5555555555');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 }
 
 main()
   .catch((e) => {
-    console.error('Error seeding database:', e);
+    console.error('❌ Error seeding database:', e);
     process.exit(1);
   })
   .finally(async () => {
