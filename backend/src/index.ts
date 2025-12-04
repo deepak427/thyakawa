@@ -102,9 +102,18 @@ app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Backend server running on port ${PORT}`);
-  console.log(`📁 Serving uploads from: ${path.join(__dirname, '../../uploads')}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+// Start server (only in non-serverless environments)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Backend server running on port ${PORT}`);
+    console.log(`📁 Serving uploads from: ${path.join(__dirname, '../../uploads')}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+} else {
+  console.log('🚀 Running in serverless mode (Vercel)');
+  console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+  console.log('CORS Origins:', allowedOrigins);
+}
+
+// Export for Vercel serverless
+export default app;
