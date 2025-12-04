@@ -30,11 +30,9 @@ const EditOrderPage: React.FC = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [orderRes, servicesRes, addressesRes, timeslotsRes] = await Promise.all([
+      const [orderRes, servicesRes] = await Promise.all([
         api.get<{ order: Order }>(`/orders/${orderId}`),
         api.get<{ services?: Service[] }>('/services'),
-        api.get<{ addresses: Address[] }>('/addresses'),
-        api.get<{ timeslots?: Timeslot[] }>('/timeslots'),
       ]);
 
       const orderData = orderRes.data.order;
