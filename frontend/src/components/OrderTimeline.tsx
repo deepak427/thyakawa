@@ -10,13 +10,13 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ currentStatus, logs }) =>
   const getStatusLabel = (status: string): string => {
     const labels: Record<string, string> = {
       PLACED: 'Order Placed',
-      ASSIGNED_TO_PARTNER: 'Partner Assigned',
-      PICKUP_PENDING: 'Pickup Pending',
+      ASSIGNED_FOR_PICKUP: 'Assigned for Pickup',
       PICKED_UP: 'Picked Up',
       AT_CENTER: 'At Center',
       PROCESSING: 'Processing',
       QC: 'Quality Check',
       READY_FOR_DELIVERY: 'Ready for Delivery',
+      ASSIGNED_FOR_DELIVERY: 'Assigned for Delivery',
       OUT_FOR_DELIVERY: 'Out for Delivery',
       DELIVERED: 'Delivered',
       COMPLETED: 'Completed',

@@ -154,13 +154,13 @@ const PartnerOrderActionPage: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      ASSIGNED_TO_PARTNER: 'bg-purple-100 text-purple-800',
-      PICKUP_PENDING: 'bg-yellow-100 text-yellow-800',
+      ASSIGNED_FOR_PICKUP: 'bg-purple-100 text-purple-800',
       PICKED_UP: 'bg-indigo-100 text-indigo-800',
       AT_CENTER: 'bg-orange-100 text-orange-800',
       PROCESSING: 'bg-cyan-100 text-cyan-800',
       QC: 'bg-teal-100 text-teal-800',
       READY_FOR_DELIVERY: 'bg-lime-100 text-lime-800',
+      ASSIGNED_FOR_DELIVERY: 'bg-yellow-100 text-yellow-800',
       OUT_FOR_DELIVERY: 'bg-amber-100 text-amber-800',
       DELIVERED: 'bg-green-100 text-green-800',
     };
@@ -185,7 +185,7 @@ const PartnerOrderActionPage: React.FC = () => {
     );
   }
 
-  const canRequestPickup = order.status === OrderStatus.ASSIGNED_TO_PARTNER || order.status === OrderStatus.PICKUP_PENDING;
+  const canRequestPickup = order.status === OrderStatus.ASSIGNED_FOR_PICKUP;
   const canMarkAtCenter = order.status === OrderStatus.PICKED_UP;
   const canMarkOutForDelivery = order.status === OrderStatus.READY_FOR_DELIVERY;
   const showPickupPhoto = order.status === OrderStatus.PICKUP_PENDING || order.status === OrderStatus.PICKED_UP;

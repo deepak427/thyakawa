@@ -42,13 +42,13 @@ const UserDashboard: React.FC = () => {
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       PLACED: 'bg-blue-100 text-blue-800 border-blue-200',
-      ASSIGNED_TO_PARTNER: 'bg-purple-100 text-purple-800 border-purple-200',
-      PICKUP_PENDING: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      ASSIGNED_FOR_PICKUP: 'bg-purple-100 text-purple-800 border-purple-200',
       PICKED_UP: 'bg-indigo-100 text-indigo-800 border-indigo-200',
       AT_CENTER: 'bg-orange-100 text-orange-800 border-orange-200',
       PROCESSING: 'bg-cyan-100 text-cyan-800 border-cyan-200',
       QC: 'bg-teal-100 text-teal-800 border-teal-200',
       READY_FOR_DELIVERY: 'bg-lime-100 text-lime-800 border-lime-200',
+      ASSIGNED_FOR_DELIVERY: 'bg-yellow-100 text-yellow-800 border-yellow-200',
       OUT_FOR_DELIVERY: 'bg-amber-100 text-amber-800 border-amber-200',
       DELIVERED: 'bg-green-100 text-green-800 border-green-200',
       COMPLETED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
