@@ -40,10 +40,6 @@ const EditOrderPage: React.FC = () => {
       const orderData = orderRes.data.order;
       setOrder(orderData);
       setServices(Array.isArray(servicesRes.data) ? servicesRes.data : (servicesRes.data.services || []));
-      setAddresses(addressesRes.data.addresses || []);
-      
-      const timeslotsData = Array.isArray(timeslotsRes.data) ? timeslotsRes.data : (timeslotsRes.data.timeslots || []);
-      setTimeslots(timeslotsData.filter(t => t.remainingCapacity > 0));
 
       // Pre-fill form
       const itemsMap: Record<string, number> = {};
