@@ -90,7 +90,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
     // Calculate total price
     let subtotalCents = 0;
     const orderItemsData = items.map(item => {
-      const service = services.find(s => s.id === item.serviceId);
+      const service = services.find((s: any) => s.id === item.serviceId);
       if (!service) {
         throw new Error('Service not found');
       }
@@ -358,7 +358,7 @@ export async function updateOrder(req: Request, res: Response): Promise<void> {
 
       let subtotalCents = 0;
       newOrderItemsData = items.map(item => {
-        const service = services.find(s => s.id === item.serviceId);
+        const service = services.find((s: any) => s.id === item.serviceId);
         if (!service) throw new Error('Service not found');
         const itemTotal = service.basePriceCents * item.quantity;
         subtotalCents += itemTotal;

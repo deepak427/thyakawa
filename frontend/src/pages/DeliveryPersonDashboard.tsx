@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -8,7 +7,6 @@ import { Trip } from '../types';
 import api from '../services/api';
 
 const DeliveryPersonDashboard: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [trips, setTrips] = useState<Trip[]>([]);

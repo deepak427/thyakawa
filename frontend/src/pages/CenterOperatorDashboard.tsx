@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import Layout from '../components/Layout';
@@ -23,23 +22,22 @@ interface Order {
 }
 
 const CenterOperatorDashboard: React.FC = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { logout } = useAuth();
   const { showToast } = useToast();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('AT_CENTER');
   const [updating, setUpdating] = useState<string | null>(null);
 
   useEffect(() => {
     fetchOrders();
-  }, [statusFilter]);
+  }, []);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/admin/orders?status=${statusFilter}`);
-      setOrders(Array.isArray(response.data) ? response.data : (response.data.orders || []));
+      const response = await api.get('/admin/orders');
+      setAllOrders(Array.isArray(response.data) ? response.data : (response.data.orders || []));
     } catch (err: any) {
       showToast(err.response?.data?.error || 'Failed to fetch orders', 'error');
     } finally {
@@ -83,7 +81,9 @@ const CenterOperatorDashboard: React.FC = () => {
     return `₹${(cents / 100).toFixed(2)}`;
   };
 
-  if (loading && orders.length === 0) {
+  const filteredOrders = allOrders.filter(o => o.status === statusFilter);
+
+  if (loading && allOrders.length === 0) {
     return (
       <Layout>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -107,30 +107,30 @@ const CenterOperatorDashboard: React.FC = () => {
           </button>
         </div>
 
-        {/* Stats */}
+        {/* Stats - Always show ALL orders */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="card bg-cyan-50 border-cyan-200 p-4">
             <p className="text-sm text-cyan-600 font-medium">At Center</p>
             <p className="text-2xl font-bold text-cyan-900">
-              {orders.filter(o => o.status === 'AT_CENTER').length}
+              {allOrders.filter(o => o.status === 'AT_CENTER').length}
             </p>
           </div>
           <div className="card bg-yellow-50 border-yellow-200 p-4">
             <p className="text-sm text-yellow-600 font-medium">Processing</p>
             <p className="text-2xl font-bold text-yellow-900">
-              {orders.filter(o => o.status === 'PROCESSING').length}
+              {allOrders.filter(o => o.status === 'PROCESSING').length}
             </p>
           </div>
           <div className="card bg-orange-50 border-orange-200 p-4">
             <p className="text-sm text-orange-600 font-medium">Quality Check</p>
             <p className="text-2xl font-bold text-orange-900">
-              {orders.filter(o => o.status === 'QC').length}
+              {allOrders.filter(o => o.status === 'QC').length}
             </p>
           </div>
           <div className="card bg-emerald-50 border-emerald-200 p-4">
             <p className="text-sm text-emerald-600 font-medium">Ready</p>
             <p className="text-2xl font-bold text-emerald-900">
-              {orders.filter(o => o.status === 'READY_FOR_DELIVERY').length}
+              {allOrders.filter(o => o.status === 'READY_FOR_DELIVERY').length}
             </p>
           </div>
         </div>
@@ -150,14 +150,14 @@ const CenterOperatorDashboard: React.FC = () => {
           </select>
         </div>
 
-        {/* Orders List */}
+        {/* Orders List - Show filtered orders */}
         <div className="space-y-4">
-          {orders.length === 0 ? (
+          {filteredOrders.length === 0 ? (
             <div className="card bg-white p-12 text-center">
               <p className="text-secondary-500">No orders at this stage</p>
             </div>
           ) : (
-            orders.map((order) => {
+            filteredOrders.map((order) => {
               const nextAction = getNextStatus(order.status);
               return (
                 <div key={order.id} className="card bg-white p-6 hover:shadow-lg transition-shadow">

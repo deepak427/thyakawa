@@ -15,8 +15,6 @@ const EditOrderPage: React.FC = () => {
 
   const [order, setOrder] = useState<Order | null>(null);
   const [services, setServices] = useState<Service[]>([]);
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
 
   const [selectedItems, setSelectedItems] = useState<Record<string, number>>({});
   const [selectedAddressId, setSelectedAddressId] = useState('');
@@ -32,20 +30,14 @@ const EditOrderPage: React.FC = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [orderRes, servicesRes, addressesRes, timeslotsRes] = await Promise.all([
+      const [orderRes, servicesRes] = await Promise.all([
         api.get<{ order: Order }>(`/orders/${orderId}`),
         api.get<{ services?: Service[] }>('/services'),
-        api.get<{ addresses: Address[] }>('/addresses'),
-        api.get<{ timeslots?: Timeslot[] }>('/timeslots'),
       ]);
 
       const orderData = orderRes.data.order;
       setOrder(orderData);
       setServices(Array.isArray(servicesRes.data) ? servicesRes.data : (servicesRes.data.services || []));
-      setAddresses(addressesRes.data.addresses || []);
-      
-      const timeslotsData = Array.isArray(timeslotsRes.data) ? timeslotsRes.data : (timeslotsRes.data.timeslots || []);
-      setTimeslots(timeslotsData.filter(t => t.remainingCapacity > 0));
 
       // Pre-fill form
       const itemsMap: Record<string, number> = {};

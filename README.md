@@ -1,6 +1,11 @@
-# Ironing Service Management System
+# 🧺 IronPress - Professional Laundry Service
 
-A complete laundry/ironing service management platform with separate pickup and delivery workflows, center operations, and role-based access control.
+A modern, full-stack laundry and ironing service management platform with separate pickup and delivery workflows, center operations, and role-based access control.
+
+![Made with React](https://img.shields.io/badge/React-18-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-blue?logo=postgresql)
 
 ## 🎯 Features
 
@@ -12,6 +17,8 @@ A complete laundry/ironing service management platform with separate pickup and 
 
 ## 🚀 Quick Start
 
+**New to the project?** Check out [GETTING_STARTED.md](./GETTING_STARTED.md) for a detailed walkthrough!
+
 ### Prerequisites
 - Node.js 18+
 - PostgreSQL (Neon serverless)
@@ -20,26 +27,24 @@ A complete laundry/ironing service management platform with separate pickup and 
 ### Installation
 
 ```bash
-# Install dependencies
+# 1. Install dependencies
 npm install
 
-# Setup backend
+# 2. Setup backend
 cd backend
 cp .env.example .env
-# Add your DATABASE_URL and other configs
+# Edit .env and add your DATABASE_URL
 
-# Run migrations
-npx prisma migrate dev
+# 3. Reset database and seed test data
+npx prisma migrate reset --force
+# Or use: reset-db.bat (Windows) / ./reset-db.sh (Mac/Linux)
 
-# Seed test data
-npx tsx prisma/seed-test.ts
-
-# Start backend
+# 4. Start backend
 npm run dev
 ```
 
 ```bash
-# Setup frontend (in new terminal)
+# 5. Setup frontend (in new terminal)
 cd frontend
 npm install
 npm run dev
@@ -51,15 +56,14 @@ npm run dev
 
 ## 👥 Test Credentials
 
-```
-Role              Phone         Password
-─────────────────────────────────────────
-Customer          9999999999    test123
-Delivery Person   8888888888    test123
-Floor Manager     7777777777    test123
-Center Operator   5555555555    test123
-Admin             6666666666    test123
-```
+See [TEST_CREDENTIALS.md](./TEST_CREDENTIALS.md) for complete login details.
+
+**Quick Reference:**
+- Admin: `admin@test.com` / `1111111111` / `test123`
+- Manager: `manager@test.com` / `2222222222` / `test123`
+- Operator: `operator@test.com` / `3333333333` / `test123`
+- Delivery: `delivery@test.com` / `4444444444` / `test123`
+- Customer: `customer@test.com` / `5555555555` / `test123`
 
 ## 📋 Order Workflow
 
@@ -219,11 +223,20 @@ npx tsx prisma/seed-test.ts
 npx prisma studio
 ```
 
+## 🚀 Deployment
+
+Deploy to Vercel in 10 minutes:
+- **Checklist:** [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) - Step-by-step checklist
+- **Quick Start:** [DEPLOYMENT_QUICK_START.md](./DEPLOYMENT_QUICK_START.md) - 10-minute guide
+- **Full Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md) - Complete documentation
+- **Troubleshooting:** [DEPLOYMENT_TROUBLESHOOTING.md](./DEPLOYMENT_TROUBLESHOOTING.md) - Fix common issues
+
 ## 📚 Documentation
 
-- [Backend README](./backend/README.md) - API documentation
-- [Frontend README](./frontend/README.md) - Component guide
-- [Database Architecture](./backend/DATABASE_ARCHITECTURE.md) - Schema details
+- [Getting Started](./GETTING_STARTED.md) - Complete setup guide
+- [Test Credentials](./TEST_CREDENTIALS.md) - All test user logins and workflow guide
+- [Deployment Guide](./DEPLOYMENT.md) - Deploy to Vercel
+- Database Schema - Click the floating DB icon on any page in the app
 
 ## 🐛 Troubleshooting
 

@@ -40,13 +40,13 @@ const PartnerDashboard: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      ASSIGNED_TO_PARTNER: 'bg-purple-100 text-purple-800 border-purple-200',
-      PICKUP_PENDING: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      ASSIGNED_FOR_PICKUP: 'bg-purple-100 text-purple-800 border-purple-200',
       PICKED_UP: 'bg-indigo-100 text-indigo-800 border-indigo-200',
       AT_CENTER: 'bg-orange-100 text-orange-800 border-orange-200',
       PROCESSING: 'bg-cyan-100 text-cyan-800 border-cyan-200',
       QC: 'bg-teal-100 text-teal-800 border-teal-200',
       READY_FOR_DELIVERY: 'bg-lime-100 text-lime-800 border-lime-200',
+      ASSIGNED_FOR_DELIVERY: 'bg-yellow-100 text-yellow-800 border-yellow-200',
       OUT_FOR_DELIVERY: 'bg-amber-100 text-amber-800 border-amber-200',
       DELIVERED: 'bg-green-100 text-green-800 border-green-200',
     };
@@ -54,7 +54,7 @@ const PartnerDashboard: React.FC = () => {
   };
 
   const getStatusBadge = (status: string) => {
-    if (status === 'ASSIGNED_TO_PARTNER' || status === 'PICKUP_PENDING') {
+    if (status === 'ASSIGNED_FOR_PICKUP') {
       return 'Pickup Required';
     } else if (status === 'READY_FOR_DELIVERY' || status === 'OUT_FOR_DELIVERY') {
       return 'Delivery Required';
@@ -93,7 +93,7 @@ const PartnerDashboard: React.FC = () => {
           <div className="card bg-gradient-to-br from-yellow-50 to-white border-yellow-100">
             <p className="text-sm font-medium text-yellow-700 mb-1">Pending Pickups</p>
             <p className="text-3xl font-bold text-yellow-600">
-              {orders.filter(o => o.status === 'ASSIGNED_TO_PARTNER' || o.status === 'PICKUP_PENDING').length}
+              {orders.filter(o => o.status === 'ASSIGNED_FOR_PICKUP').length}
             </p>
           </div>
           <div className="card bg-gradient-to-br from-amber-50 to-white border-amber-100">
