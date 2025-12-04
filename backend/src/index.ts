@@ -58,6 +58,21 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
+// Root route
+app.get('/', (_req, res) => {
+  res.json({ 
+    message: 'Ironing Service API',
+    status: 'running',
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth/*',
+      users: '/api/users/*',
+      orders: '/api/orders/*'
+    }
+  });
+});
+
 // Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
