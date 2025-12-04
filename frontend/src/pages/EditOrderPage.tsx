@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { Order, Service, Address, Timeslot, DeliveryType } from '../types';
+import { Order, Service, DeliveryType } from '../types';
 import api from '../services/api';
 
 const EditOrderPage: React.FC = () => {
