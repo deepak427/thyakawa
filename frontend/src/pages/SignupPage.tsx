@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { LoadingSpinner } from '../components';
+import { DatabaseSchemaViewer } from '../components/DatabaseSchemaViewer';
+import { Logo } from '../components/Logo';
 import api from '../services/api';
 
 const SignupPage: React.FC = () => {
@@ -107,7 +109,10 @@ const SignupPage: React.FC = () => {
 
       <div className="max-w-md w-full glass-panel rounded-2xl p-8 relative z-10 animate-fade-in">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary-900 mb-2">Create Account</h1>
+          <div className="flex justify-center mb-4">
+            <Logo size="lg" showText={true} />
+          </div>
+          <h1 className="text-3xl font-bold text-primary-900 mb-2">Create Account</h1>
           <p className="text-secondary-500">
             {step === 'phone' ? 'Join our ironing service today' : 'Verify your phone number'}
           </p>
@@ -267,6 +272,9 @@ const SignupPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Database Schema Viewer */}
+      <DatabaseSchemaViewer tables={['User', 'Wallet']} />
     </div>
   );
 };

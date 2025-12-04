@@ -1,7 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Role } from '../types';
+import { DatabaseSchemaViewer } from './DatabaseSchemaViewer';
+import { Logo } from './Logo';
+import { PAGE_SCHEMAS } from '../data/schemaData';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +13,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -63,13 +67,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link to={getDashboardLink()} className="flex items-center gap-2 group">
-                <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary-500/30 group-hover:scale-105 transition-transform">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <span className="text-xl font-display font-bold text-secondary-900 tracking-tight">Ironing<span className="text-primary-600">Service</span></span>
+              <Link to={getDashboardLink()} className="group">
+                <Logo size="sm" showText={true} className="group-hover:scale-105 transition-transform" />
               </Link>
             </div>
 
@@ -98,8 +97,45 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </main>
+
+      {/* Database Schema Viewer */}
+      <DatabaseSchemaViewer tables={getPageSchemas(location.pathname)} />
     </div>
   );
 };
+
+// Helper function to get schemas for current page
+function getPageSchemas(pathname: string): string[] {
+  // Auth pages
+  if (pathname === '/login') return PAGE_SCHEMAS['login'];
+  if (pathname === '/signup') return PAGE_SCHEMAS['signup'];
+  
+  // Map pathname to schema key
+  if (pathname.includes('/user/dashboard')) return PAGE_SCHEMAS['user-dashboard'];
+  if (pathname.includes('/user/orders/new')) return PAGE_SCHEMAS['create-order'];
+  if (pathname.includes('/user/orders/')) return PAGE_SCHEMAS['order-detail'];
+  if (pathname.includes('/user/wallet')) return PAGE_SCHEMAS['wallet'];
+  if (pathname.includes('/user/addresses')) return PAGE_SCHEMAS['addresses'];
+  if (pathname.includes('/user/referral')) return PAGE_SCHEMAS['referral'];
+  
+  if (pathname.includes('/delivery/dashboard')) return PAGE_SCHEMAS['delivery-dashboard'];
+  if (pathname.includes('/delivery/trips/')) return PAGE_SCHEMAS['delivery-trip'];
+  
+  if (pathname.includes('/manager/dashboard')) return PAGE_SCHEMAS['manager-dashboard'];
+  if (pathname.includes('/manager/orders')) return PAGE_SCHEMAS['manager-orders'];
+  if (pathname.includes('/manager/trips/') && pathname.split('/').length > 3) return PAGE_SCHEMAS['manager-trip-detail'];
+  if (pathname.includes('/manager/trips')) return PAGE_SCHEMAS['manager-trips'];
+  if (pathname.includes('/manager/delivery-partners')) return PAGE_SCHEMAS['manager-partners'];
+  
+  if (pathname.includes('/operator/dashboard')) return PAGE_SCHEMAS['operator-dashboard'];
+  
+  if (pathname.includes('/admin/dashboard')) return PAGE_SCHEMAS['admin-dashboard'];
+  if (pathname.includes('/admin/timeslots')) return PAGE_SCHEMAS['admin-timeslots'];
+  if (pathname.includes('/admin/services')) return PAGE_SCHEMAS['admin-services'];
+  if (pathname.includes('/admin/centers')) return PAGE_SCHEMAS['admin-centers'];
+  if (pathname.includes('/admin/payouts')) return PAGE_SCHEMAS['admin-payouts'];
+  
+  return [];
+}
 
 export default Layout;

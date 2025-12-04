@@ -1,0 +1,56 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#gradient1)"/>
+  
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="gradient1" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E0E7FF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Iron Shape -->
+  <g transform="translate(120, 140)">
+    <!-- Iron Body -->
+    <path d="M 40 20 L 240 20 C 260 20 270 30 270 50 L 270 120 C 270 140 260 150 240 150 L 40 150 C 20 150 10 140 10 120 L 10 50 C 10 30 20 20 40 20 Z" 
+          fill="url(#gradient2)" 
+          stroke="#1E40AF" 
+          stroke-width="4"/>
+    
+    <!-- Iron Handle -->
+    <path d="M 80 20 Q 80 -20 140 -20 Q 200 -20 200 20" 
+          fill="none" 
+          stroke="#1E40AF" 
+          stroke-width="8" 
+          stroke-linecap="round"/>
+    
+    <!-- Steam Holes -->
+    <circle cx="80" cy="85" r="8" fill="#3B82F6" opacity="0.6"/>
+    <circle cx="120" cy="85" r="8" fill="#3B82F6" opacity="0.6"/>
+    <circle cx="160" cy="85" r="8" fill="#3B82F6" opacity="0.6"/>
+    <circle cx="200" cy="85" r="8" fill="#3B82F6" opacity="0.6"/>
+    
+    <circle cx="100" cy="110" r="8" fill="#3B82F6" opacity="0.6"/>
+    <circle cx="140" cy="110" r="8" fill="#3B82F6" opacity="0.6"/>
+    <circle cx="180" cy="110" r="8" fill="#3B82F6" opacity="0.6"/>
+    
+    <!-- Steam Effect -->
+    <g opacity="0.7">
+      <path d="M 80 160 Q 75 180 80 200" stroke="#60A5FA" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 140 160 Q 135 185 140 210" stroke="#60A5FA" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 200 160 Q 195 180 200 200" stroke="#60A5FA" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </g>
+  </g>
+  
+  <!-- Sparkle Effects -->
+  <g opacity="0.8">
+    <path d="M 380 180 L 385 190 L 395 195 L 385 200 L 380 210 L 375 200 L 365 195 L 375 190 Z" fill="#FFFFFF"/>
+    <path d="M 420 280 L 423 286 L 429 289 L 423 292 L 420 298 L 417 292 L 411 289 L 417 286 Z" fill="#FFFFFF"/>
+    <path d="M 100 320 L 103 326 L 109 329 L 103 332 L 100 338 L 97 332 L 91 329 L 97 326 Z" fill="#FFFFFF"/>
+  </g>
+</svg>
