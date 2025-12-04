@@ -20,9 +20,29 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // CORS configuration
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  'https://ironing-service.vercel.app',
+  'http://localhost:5173'
+].filter(Boolean);
+
+console.log('Allowed CORS origins:', allowedOrigins);
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('Blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Request logging middleware
