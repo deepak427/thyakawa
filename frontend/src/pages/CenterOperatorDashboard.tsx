@@ -23,8 +23,7 @@ interface Order {
 }
 
 const CenterOperatorDashboard: React.FC = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { logout } = useAuth();
   const { showToast } = useToast();
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);

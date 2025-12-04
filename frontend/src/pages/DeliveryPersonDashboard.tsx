@@ -8,7 +8,6 @@ import { Trip } from '../types';
 import api from '../services/api';
 
 const DeliveryPersonDashboard: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [trips, setTrips] = useState<Trip[]>([]);
