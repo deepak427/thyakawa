@@ -14,7 +14,6 @@ interface DeliveryPerson {
 }
 
 const FloorManagerOrdersPage: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);

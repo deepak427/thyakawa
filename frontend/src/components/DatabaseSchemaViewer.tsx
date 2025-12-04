@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SCHEMA_DATA, SchemaField } from '../data/schemaData';
+import { SCHEMA_DATA } from '../data/schemaData';
 
 interface DatabaseSchemaViewerProps {
   tables: string[];

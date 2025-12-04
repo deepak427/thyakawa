@@ -188,7 +188,7 @@ const PartnerOrderActionPage: React.FC = () => {
   const canRequestPickup = order.status === OrderStatus.ASSIGNED_FOR_PICKUP;
   const canMarkAtCenter = order.status === OrderStatus.PICKED_UP;
   const canMarkOutForDelivery = order.status === OrderStatus.READY_FOR_DELIVERY;
-  const showPickupPhoto = order.status === OrderStatus.PICKUP_PENDING || order.status === OrderStatus.PICKED_UP;
+  const showPickupPhoto = order.status === OrderStatus.PICKED_UP;
   const showDeliveryPhoto = order.status === OrderStatus.OUT_FOR_DELIVERY;
 
   return (

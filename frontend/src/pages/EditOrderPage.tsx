@@ -15,8 +15,6 @@ const EditOrderPage: React.FC = () => {
 
   const [order, setOrder] = useState<Order | null>(null);
   const [services, setServices] = useState<Service[]>([]);
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
 
   const [selectedItems, setSelectedItems] = useState<Record<string, number>>({});
   const [selectedAddressId, setSelectedAddressId] = useState('');
