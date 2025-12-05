@@ -142,7 +142,7 @@ const PartnerDashboard: React.FC = () => {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary-600 text-lg">{formatCurrency(order.totalCents)}</p>
+                      <p className="font-bold text-primary-600 text-lg">{formatCurrency(order.totalCoins)}</p>
                     </div>
                   </div>
 
@@ -151,9 +151,9 @@ const PartnerDashboard: React.FC = () => {
                     {order.address && (
                       <div className="bg-secondary-50 rounded-lg p-3 border border-secondary-100">
                         <p className="text-xs text-secondary-500 uppercase tracking-wider font-medium mb-1">Delivery Address</p>
-                        <p className="text-sm font-medium text-secondary-900">{order.address.line1}</p>
+                        <p className="text-sm font-medium text-secondary-900">{order.address}</p>
                         <p className="text-xs text-secondary-600">
-                          {order.address.city}, {order.address.pincode}
+                          {order.address}, {order.address.pincode}
                         </p>
                       </div>
                     )}

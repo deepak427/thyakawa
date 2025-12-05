@@ -42,8 +42,8 @@ const WalletPage: React.FC = () => {
     try {
       setSubmitting(true);
 
-      const amountCents = Math.round(amount * 100);
-      await api.post('/wallet/topup', { amountCents });
+      const coins = Math.round(amount * 100);
+      await api.post('/wallet/topup', { coins });
 
       showToast(`Successfully added ₹${amount.toFixed(2)} to your wallet`, 'success');
       setTopupAmount('');
@@ -94,7 +94,7 @@ const WalletPage: React.FC = () => {
           <div className="relative z-10">
             <p className="text-primary-100 text-sm font-medium mb-2 uppercase tracking-wider">Current Balance</p>
             <p className="text-5xl font-bold mb-4 tracking-tight">
-              {wallet ? formatCurrency(wallet.balanceCents) : '₹0.00'}
+              {wallet ? formatCurrency(wallet.coins) : '₹0.00'}
             </p>
             <div className="flex items-center gap-2 text-primary-100 text-sm bg-white/10 inline-flex px-3 py-1 rounded-full backdrop-blur-sm">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

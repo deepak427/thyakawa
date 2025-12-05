@@ -9,7 +9,7 @@ interface Order {
   id: string;
   status: string;
   deliveryType: string;
-  totalCents: number;
+  totalCoins: number;
   user: {
     name: string;
     phone: string;
@@ -22,7 +22,7 @@ interface Order {
   items: Array<{
     name: string;
     quantity: number;
-    priceCents: number;
+    coins: number;
   }>;
 }
 
@@ -33,8 +33,8 @@ interface Trip {
   startTime: string;
   endTime: string;
   status: string;
-  pickupOrders?: Order[];
-  deliveryOrders?: Order[];
+  orders?: Order[];
+  orders?: Order[];
 }
 
 const DeliveryPersonTripPage: React.FC = () => {
@@ -183,7 +183,7 @@ const DeliveryPersonTripPage: React.FC = () => {
     );
   }
 
-  const orders = trip.type === 'PICKUP' ? (trip.pickupOrders || []) : (trip.deliveryOrders || []);
+  const orders = trip.type === 'PICKUP' ? (trip.orders || []) : (trip.orders || []);
 
   return (
     <Layout>
@@ -226,12 +226,12 @@ const DeliveryPersonTripPage: React.FC = () => {
                     <h3 className="text-lg font-bold text-secondary-900">{order.user.name}</h3>
                     <p className="text-sm text-secondary-500">{order.user.phone}</p>
                     <p className="text-sm text-secondary-600 mt-1">
-                      📍 {order.address.line1}, {order.address.city} - {order.address.pincode}
+                      📍 {order.address}, {order.address} - {order.address.pincode}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-bold text-secondary-900">{formatCurrency(order.totalCents)}</p>
+                  <p className="text-xl font-bold text-secondary-900">{formatCurrency(order.totalCoins)}</p>
                   <div className="flex items-center gap-2 mt-1">
                     {order.deliveryType === 'PREMIUM' ? (
                       <span className="flex items-center gap-1 text-amber-600 text-sm font-medium">
@@ -262,7 +262,7 @@ const DeliveryPersonTripPage: React.FC = () => {
                         {item.quantity}x {item.name}
                       </span>
                       <span className="text-secondary-900 font-medium">
-                        {formatCurrency(item.priceCents)}
+                        {formatCurrency(item.coins)}
                       </span>
                     </div>
                   ))}

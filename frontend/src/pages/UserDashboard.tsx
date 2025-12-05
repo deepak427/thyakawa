@@ -93,7 +93,7 @@ const UserDashboard: React.FC = () => {
             <div className="relative z-10 flex justify-between items-center">
               <div>
                 <p className="text-primary-100 text-sm font-medium mb-1">Wallet Balance</p>
-                <p className="text-4xl font-bold font-display">{wallet ? formatCurrency(wallet.balanceCents) : '₹0.00'}</p>
+                <p className="text-4xl font-bold font-display">{wallet ? formatCurrency(wallet.coins) : '₹0.00'}</p>
               </div>
               <button
                 onClick={() => navigate('/user/wallet')}
@@ -218,7 +218,7 @@ const UserDashboard: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-secondary-400 uppercase tracking-wider font-medium">Total</p>
-                        <p className="font-bold text-primary-600 text-lg">{formatCurrency(order.totalCents)}</p>
+                        <p className="font-bold text-primary-600 text-lg">{formatCurrency(order.totalCoins)}</p>
                       </div>
                       <div className="hidden md:block text-secondary-300 group-hover:text-primary-500 transition-colors">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

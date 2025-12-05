@@ -9,7 +9,7 @@ interface Order {
   id: string;
   status: string;
   deliveryType: string;
-  totalCents: number;
+  totalCoins: number;
   user: {
     name: string;
     phone: string;
@@ -26,7 +26,7 @@ interface Order {
   items: Array<{
     name: string;
     quantity: number;
-    priceCents: number;
+    coins: number;
   }>;
 }
 
@@ -37,8 +37,8 @@ interface Trip {
   startTime: string;
   endTime: string;
   status: string;
-  pickupOrders?: Order[];
-  deliveryOrders?: Order[];
+  orders?: Order[];
+  orders?: Order[];
 }
 
 const FloorManagerTripDetailsPage: React.FC = () => {
@@ -115,7 +115,7 @@ const FloorManagerTripDetailsPage: React.FC = () => {
     );
   }
 
-  const orders = trip.type === 'PICKUP' ? (trip.pickupOrders || []) : (trip.deliveryOrders || []);
+  const orders = trip.type === 'PICKUP' ? (trip.orders || []) : (trip.orders || []);
 
   return (
     <Layout>
@@ -163,7 +163,7 @@ const FloorManagerTripDetailsPage: React.FC = () => {
                       <h3 className="text-lg font-bold text-secondary-900">{order.user.name}</h3>
                       <p className="text-sm text-secondary-500">{order.user.phone}</p>
                       <p className="text-sm text-secondary-600 mt-1">
-                        📍 {order.address.line1}, {order.address.city} - {order.address.pincode}
+                        📍 {order.address}, {order.address} - {order.address.pincode}
                       </p>
                       {order.timeslot && trip.type === 'PICKUP' && (
                         <p className="text-sm text-primary-600 font-medium mt-1">
@@ -173,7 +173,7 @@ const FloorManagerTripDetailsPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-secondary-900">{formatCurrency(order.totalCents)}</p>
+                    <p className="text-xl font-bold text-secondary-900">{formatCurrency(order.totalCoins)}</p>
                     <div className="flex items-center gap-2 mt-1">
                       {order.deliveryType === 'PREMIUM' ? (
                         <span className="text-amber-600 text-sm font-medium">⚡ Premium</span>
@@ -194,7 +194,7 @@ const FloorManagerTripDetailsPage: React.FC = () => {
                           {item.quantity}x {item.name}
                         </span>
                         <span className="font-medium text-secondary-900">
-                          {formatCurrency(item.priceCents)}
+                          {formatCurrency(item.coins)}
                         </span>
                       </div>
                     ))}

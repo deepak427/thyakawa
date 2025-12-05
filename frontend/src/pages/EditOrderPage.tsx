@@ -17,7 +17,7 @@ const EditOrderPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
 
   const [selectedItems, setSelectedItems] = useState<Record<string, number>>({});
-  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [selectedaddress, setSelectedaddress] = useState('');
   const [selectedTimeslotId, setSelectedTimeslotId] = useState('');
   const [deliveryType, setDeliveryType] = useState<DeliveryType>(DeliveryType.STANDARD);
 
@@ -45,7 +45,7 @@ const EditOrderPage: React.FC = () => {
         itemsMap[item.serviceId] = item.quantity;
       });
       setSelectedItems(itemsMap);
-      setSelectedAddressId(orderData.addressId);
+      setSelectedaddress(orderData.address);
       setSelectedTimeslotId(orderData.timeslotId);
       setDeliveryType(orderData.deliveryType);
     } catch (err: any) {
@@ -74,7 +74,7 @@ const EditOrderPage: React.FC = () => {
   const calculateSubtotal = () => {
     return Object.entries(selectedItems).reduce((total, [serviceId, quantity]) => {
       const service = services.find(s => s.id === serviceId);
-      return total + (service?.basePriceCents || 0) * quantity;
+      return total + (service?.basecoins || 0) * quantity;
     }, 0);
   };
 
@@ -103,7 +103,7 @@ const EditOrderPage: React.FC = () => {
       }));
 
       await api.put(`/orders/${orderId}`, {
-        addressId: selectedAddressId,
+        address: selectedaddress,
         timeslotId: selectedTimeslotId,
         deliveryType,
         items,
@@ -163,7 +163,7 @@ const EditOrderPage: React.FC = () => {
                 >
                   <div>
                     <p className="font-bold text-secondary-900">{service.name}</p>
-                    <p className="text-sm text-secondary-500">{formatCurrency(service.basePriceCents)} per item</p>
+                    <p className="text-sm text-secondary-500">{formatCurrency(service.basecoins)} per item</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <button

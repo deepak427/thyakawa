@@ -24,7 +24,7 @@ const FloorManagerOrdersPage: React.FC = () => {
   // Trip creation
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
   const [showTripModal, setShowTripModal] = useState(false);
-  const [tripType, setTripType] = useState<'PICKUP' | 'DELIVERY'>('PICKUP');
+  const [TripStatus, setTripStatus] = useState<'PICKUP' | 'DELIVERY'>('PICKUP');
   const [deliveryPersonId, setDeliveryPersonId] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
@@ -81,7 +81,7 @@ const FloorManagerOrdersPage: React.FC = () => {
   const handleCreateTrip = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!deliveryPersonId || !scheduledDate || !startTime || !endTime || !tripType) {
+    if (!deliveryPersonId || !scheduledDate || !startTime || !endTime || !TripStatus) {
       showToast('Please fill all fields', 'error');
       return;
     }
@@ -99,9 +99,9 @@ const FloorManagerOrdersPage: React.FC = () => {
         startTime,
         endTime,
         orderIds: selectedOrderIds,
-        type: tripType,
+        type: TripStatus,
       });
-      showToast(`${tripType} trip created with ${selectedOrderIds.length} orders!`, 'success');
+      showToast(`${TripStatus} trip created with ${selectedOrderIds.length} orders!`, 'success');
       setShowTripModal(false);
       setSelectedOrderIds([]);
       resetForm();
@@ -118,7 +118,7 @@ const FloorManagerOrdersPage: React.FC = () => {
     setScheduledDate('');
     setStartTime('09:00');
     setEndTime('12:00');
-    setTripType('PICKUP');
+    setTripStatus('PICKUP');
   };
 
   const getUniqueTimeSlots = () => {
@@ -191,9 +191,9 @@ const FloorManagerOrdersPage: React.FC = () => {
                 onClick={() => {
                   // Auto-set trip type based on order status
                   if (statusFilter === 'READY_FOR_DELIVERY') {
-                    setTripType('DELIVERY');
+                    setTripStatus('DELIVERY');
                   } else if (statusFilter === 'PLACED') {
-                    setTripType('PICKUP');
+                    setTripStatus('PICKUP');
                   }
                   setShowTripModal(true);
                 }}
@@ -306,7 +306,7 @@ const FloorManagerOrdersPage: React.FC = () => {
                         </div>
                         <div className="text-right">
                           <p className="text-lg font-bold text-secondary-900">
-                            {formatCurrency(order.totalCents)}
+                            {formatCurrency(order.totalCoins)}
                           </p>
                           <p className="text-xs text-secondary-500 mt-1">
                             {formatDate(order.createdAt)}
@@ -341,11 +341,11 @@ const FloorManagerOrdersPage: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
             <h2 className="text-2xl font-bold text-secondary-900 mb-4">
-              {tripType === 'PICKUP' ? '📦 Create Pickup Trip' : '🚚 Create Delivery Trip'}
+              {TripStatus === 'PICKUP' ? '📦 Create Pickup Trip' : '🚚 Create Delivery Trip'}
             </h2>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
               <p className="text-sm text-blue-800">
-                {tripType === 'PICKUP' 
+                {TripStatus === 'PICKUP' 
                   ? `Creating pickup trip for ${selectedOrderIds.length} orders (Status: PLACED)` 
                   : `Creating delivery trip for ${selectedOrderIds.length} orders (Status: READY_FOR_DELIVERY)`}
               </p>
@@ -356,8 +356,8 @@ const FloorManagerOrdersPage: React.FC = () => {
                   Trip Type *
                 </label>
                 <select
-                  value={tripType}
-                  onChange={(e) => setTripType(e.target.value as 'PICKUP' | 'DELIVERY')}
+                  value={TripStatus}
+                  onChange={(e) => setTripStatus(e.target.value as 'PICKUP' | 'DELIVERY')}
                   className="input-field"
                   required
                 >
@@ -365,7 +365,7 @@ const FloorManagerOrdersPage: React.FC = () => {
                   <option value="DELIVERY">🚚 Delivery Trip</option>
                 </select>
                 <p className="text-xs text-secondary-500 mt-1">
-                  {tripType === 'PICKUP' 
+                  {TripStatus === 'PICKUP' 
                     ? 'For collecting orders from customers' 
                     : 'For delivering processed orders to customers'}
                 </p>
@@ -431,7 +431,7 @@ const FloorManagerOrdersPage: React.FC = () => {
                 </div>
               </div>
 
-              {timeSlotFilter && tripType === 'PICKUP' && (
+              {timeSlotFilter && TripStatus === 'PICKUP' && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <p className="text-sm text-blue-800">
                     📌 Selected orders have pickup slot: <strong>{timeSlotFilter}</strong>
@@ -456,7 +456,7 @@ const FloorManagerOrdersPage: React.FC = () => {
                   className="btn-primary flex-1"
                   disabled={creating}
                 >
-                  {creating ? 'Creating...' : `Create ${tripType} Trip`}
+                  {creating ? 'Creating...' : `Create ${TripStatus} Trip`}
                 </button>
               </div>
             </form>

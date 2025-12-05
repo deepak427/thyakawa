@@ -9,7 +9,7 @@ interface Order {
   id: string;
   status: string;
   deliveryType: string;
-  totalCents: number;
+  totalCoins: number;
   user: {
     name: string;
     phone: string;
@@ -175,7 +175,7 @@ const CenterOperatorDashboard: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xl font-bold text-secondary-900">{formatCurrency(order.totalCents)}</p>
+                      <p className="text-xl font-bold text-secondary-900">{formatCurrency(order.totalCoins)}</p>
                       <p className="text-xs text-secondary-500 mt-1">
                         {new Date(order.createdAt).toLocaleDateString('en-IN')}
                       </p>

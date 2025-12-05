@@ -24,7 +24,7 @@ interface Payout {
   id: string;
   partnerId: string;
   orderId: string;
-  amountCents: number;
+  coins: number;
   status: 'PENDING' | 'COMPLETED';
   createdAt: string;
   partner?: Partner;
@@ -43,7 +43,7 @@ const PayoutManagementPage: React.FC = () => {
   const [formData, setFormData] = useState({
     partnerId: '',
     orderId: '',
-    amountCents: 0,
+    coins: 0,
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -78,7 +78,7 @@ const PayoutManagementPage: React.FC = () => {
     setFormData({
       partnerId: '',
       orderId: '',
-      amountCents: 0,
+      coins: 0,
     });
     setShowForm(true);
   };
@@ -90,7 +90,7 @@ const PayoutManagementPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.partnerId || !formData.orderId || formData.amountCents <= 0) {
+    if (!formData.partnerId || !formData.orderId || formData.coins <= 0) {
       alert('Please fill in all fields with valid values');
       return;
     }
@@ -210,7 +210,7 @@ const PayoutManagementPage: React.FC = () => {
                       {payout.orderId.substring(0, 8)}...
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                      {formatCurrency(payout.amountCents)}
+                      {formatCurrency(payout.coins)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -296,11 +296,11 @@ const PayoutManagementPage: React.FC = () => {
                   type="number"
                   step="0.01"
                   min="0"
-                  value={formData.amountCents / 100}
+                  value={formData.coins / 100}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      amountCents: Math.round(parseFloat(e.target.value) * 100),
+                      coins: Math.round(parseFloat(e.target.value) * 100),
                     })
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"

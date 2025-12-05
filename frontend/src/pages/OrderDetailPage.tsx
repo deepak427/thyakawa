@@ -190,18 +190,18 @@ const OrderDetailPage: React.FC = () => {
                         <p className="text-sm text-secondary-500 font-medium">Quantity: {item.quantity}</p>
                       </div>
                     </div>
-                    <p className="font-bold text-secondary-900">{formatCurrency(item.priceCents * item.quantity)}</p>
+                    <p className="font-bold text-secondary-900">{formatCurrency(item.coins * item.quantity)}</p>
                   </div>
                 ))}
-                {order.deliveryChargeCents > 0 && (
+                {order.deliveryChargeCoins > 0 && (
                   <div className="flex justify-between items-center pt-3 text-secondary-600">
                     <span className="font-medium">Delivery Charge</span>
-                    <span className="font-semibold">{formatCurrency(order.deliveryChargeCents)}</span>
+                    <span className="font-semibold">{formatCurrency(order.deliveryChargeCoins)}</span>
                   </div>
                 )}
                 <div className="flex justify-between items-center pt-4 mt-2 border-t border-secondary-200">
                   <span className="text-lg font-bold text-secondary-900">Total</span>
-                  <span className="text-2xl font-bold text-primary-600">{formatCurrency(order.totalCents)}</span>
+                  <span className="text-2xl font-bold text-primary-600">{formatCurrency(order.totalCoins)}</span>
                 </div>
               </div>
             </div>
@@ -309,6 +309,14 @@ const OrderDetailPage: React.FC = () => {
                       <p className="text-sm text-secondary-600">
                         {order.address?.city || 'N/A'}, {order.address?.pincode || 'N/A'}
                       </p>
+                      {order.alternatePhone && (
+                        <div className="mt-2 pt-2 border-t border-secondary-200 flex items-center gap-2">
+                          <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                          <span className="text-sm text-secondary-700 font-medium">{order.alternatePhone}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

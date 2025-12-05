@@ -26,9 +26,10 @@ const CreateOrderPage: React.FC = () => {
 
   // Form data
   const [selectedItems, setSelectedItems] = useState<Record<string, number>>({});
-  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [selectedaddress, setSelectedaddress] = useState('');
   const [selectedTimeslotId, setSelectedTimeslotId] = useState('');
   const [deliveryType, setDeliveryType] = useState<'STANDARD' | 'PREMIUM'>('STANDARD');
+  const [alternatePhone, setAlternatePhone] = useState('');
 
   useEffect(() => {
     fetchInitialData();
@@ -82,7 +83,7 @@ const CreateOrderPage: React.FC = () => {
   const calculateSubtotal = () => {
     return Object.entries(selectedItems).reduce((total, [serviceId, quantity]) => {
       const service = services.find(s => s.id === serviceId);
-      return total + (service?.basePriceCents || 0) * quantity;
+      return total + (service?.basecoins || 0) * quantity;
     }, 0);
   };
 
@@ -109,7 +110,7 @@ const CreateOrderPage: React.FC = () => {
       }
       setStep(2);
     } else if (step === 2) {
-      if (!selectedAddressId) {
+      if (!selectedaddress) {
         showToast('Please select a delivery address', 'error');
         return;
       }
@@ -127,8 +128,8 @@ const CreateOrderPage: React.FC = () => {
     }
 
     const total = calculateTotal();
-    if (wallet && total > wallet.balanceCents) {
-      showToast(`Insufficient balance. You need ${formatCurrency(total)} but have ${formatCurrency(wallet.balanceCents)}`, 'error');
+    if (wallet && total > wallet.coins) {
+      showToast(`Insufficient balance. You need ${formatCurrency(total)} but have ${formatCurrency(wallet.coins)}`, 'error');
       return;
     }
 
@@ -144,10 +145,11 @@ const CreateOrderPage: React.FC = () => {
       const selectedTimeslot = timeslots.find(t => t.id === selectedTimeslotId);
 
       const response = await api.post('/orders', {
-        addressId: selectedAddressId,
+        address: selectedaddress,
         centerId: selectedTimeslot?.centerId,
         timeslotId: selectedTimeslotId,
         deliveryType,
+        alternatePhone: alternatePhone || undefined,
         items,
       });
 
@@ -233,7 +235,7 @@ const CreateOrderPage: React.FC = () => {
                 >
                   <div>
                     <p className="font-bold text-secondary-900 text-lg">{service.name}</p>
-                    <p className="text-sm text-secondary-500 font-medium">{formatCurrency(service.basePriceCents)} per item</p>
+                    <p className="text-sm text-secondary-500 font-medium">{formatCurrency(service.basecoins)} per item</p>
                   </div>
                   <div className="flex items-center gap-4 bg-white rounded-lg p-1 border border-secondary-200 shadow-sm">
                     <button
@@ -302,7 +304,7 @@ const CreateOrderPage: React.FC = () => {
                   {addresses.map((address) => (
                     <label
                       key={address.id}
-                      className={`relative block border-2 rounded-xl p-5 cursor-pointer transition-all duration-200 ${selectedAddressId === address.id
+                      className={`relative block border-2 rounded-xl p-5 cursor-pointer transition-all duration-200 ${selectedaddress === address.id
                           ? 'border-primary-500 bg-primary-50/30 shadow-md transform scale-[1.01]'
                           : 'border-secondary-200 hover:border-primary-300 hover:shadow-sm'
                         }`}
@@ -311,14 +313,14 @@ const CreateOrderPage: React.FC = () => {
                         type="radio"
                         name="address"
                         value={address.id}
-                        checked={selectedAddressId === address.id}
-                        onChange={(e) => setSelectedAddressId(e.target.value)}
+                        checked={selectedaddress === address.id}
+                        onChange={(e) => setSelectedaddress(e.target.value)}
                         className="sr-only"
                       />
                       <div className="flex items-start gap-4">
-                        <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${selectedAddressId === address.id ? 'border-primary-600' : 'border-secondary-300'
+                        <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${selectedaddress === address.id ? 'border-primary-600' : 'border-secondary-300'
                           }`}>
-                          {selectedAddressId === address.id && (
+                          {selectedaddress === address.id && (
                             <div className="w-2.5 h-2.5 rounded-full bg-primary-600" />
                           )}
                         </div>
@@ -337,6 +339,27 @@ const CreateOrderPage: React.FC = () => {
                     </label>
                   ))}
                 </div>
+
+                {/* Alternate Phone Number */}
+                <div className="mb-6 bg-secondary-50 border border-secondary-200 rounded-xl p-5">
+                  <label className="block mb-2">
+                    <span className="text-sm font-semibold text-secondary-700 flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      Alternate Contact Number (Optional)
+                    </span>
+                    <span className="text-xs text-secondary-500 mt-1 block">For this order only, not saved to address</span>
+                  </label>
+                  <input
+                    type="tel"
+                    value={alternatePhone}
+                    onChange={(e) => setAlternatePhone(e.target.value)}
+                    placeholder="Enter alternate phone number"
+                    className="w-full px-4 py-3 border-2 border-secondary-200 rounded-lg focus:border-primary-500 focus:outline-none transition-colors"
+                  />
+                </div>
+
                 <div className="flex gap-4">
                   <button
                     onClick={() => setStep(1)}
@@ -589,7 +612,7 @@ const CreateOrderPage: React.FC = () => {
                       return (
                         <div key={serviceId} className="flex justify-between items-center">
                           <span className="text-secondary-600 font-medium">{service?.name} <span className="text-secondary-400">× {quantity}</span></span>
-                          <span className="font-bold text-secondary-900">{formatCurrency((service?.basePriceCents || 0) * quantity)}</span>
+                          <span className="font-bold text-secondary-900">{formatCurrency((service?.basecoins || 0) * quantity)}</span>
                         </div>
                       );
                     })}
@@ -599,8 +622,8 @@ const CreateOrderPage: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-secondary-100 mt-2">
                       <span className="text-secondary-600 font-medium">Wallet Balance</span>
-                      <span className={`font-bold ${wallet && calculateTotal() > wallet.balanceCents ? 'text-red-500' : 'text-green-600'}`}>
-                        {wallet ? formatCurrency(wallet.balanceCents) : '₹0.00'}
+                      <span className={`font-bold ${wallet && calculateTotal() > wallet.coins ? 'text-red-500' : 'text-green-600'}`}>
+                        {wallet ? formatCurrency(wallet.coins) : '₹0.00'}
                       </span>
                     </div>
                   </div>

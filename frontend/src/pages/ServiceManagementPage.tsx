@@ -7,7 +7,7 @@ import ErrorMessage from '../components/ErrorMessage';
 interface Service {
   id: string;
   name: string;
-  basePriceCents: number;
+  basecoins: number;
 }
 
 const ServiceManagementPage: React.FC = () => {
@@ -21,7 +21,7 @@ const ServiceManagementPage: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    basePriceCents: 0,
+    basecoins: 0,
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -46,7 +46,7 @@ const ServiceManagementPage: React.FC = () => {
     setEditingId(null);
     setFormData({
       name: '',
-      basePriceCents: 0,
+      basecoins: 0,
     });
     setShowForm(true);
   };
@@ -55,7 +55,7 @@ const ServiceManagementPage: React.FC = () => {
     setEditingId(service.id);
     setFormData({
       name: service.name,
-      basePriceCents: service.basePriceCents,
+      basecoins: service.basecoins,
     });
     setShowForm(true);
   };
@@ -68,7 +68,7 @@ const ServiceManagementPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || formData.basePriceCents <= 0) {
+    if (!formData.name || formData.basecoins <= 0) {
       alert('Please fill in all fields with valid values');
       return;
     }
@@ -162,7 +162,7 @@ const ServiceManagementPage: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-semibold text-gray-900">
-                        {formatCurrency(service.basePriceCents)}
+                        {formatCurrency(service.basecoins)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -223,11 +223,11 @@ const ServiceManagementPage: React.FC = () => {
                   type="number"
                   step="0.01"
                   min="0"
-                  value={formData.basePriceCents / 100}
+                  value={formData.basecoins / 100}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      basePriceCents: Math.round(parseFloat(e.target.value) * 100),
+                      basecoins: Math.round(parseFloat(e.target.value) * 100),
                     })
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"

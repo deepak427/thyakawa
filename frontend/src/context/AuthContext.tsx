@@ -56,12 +56,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (credentials: LoginCredentials) => {
-    const response = await api.post<AuthResponse>('/auth/login', credentials);
-    const { token, user } = response.data;
-    
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    setUser(user);
+    console.log('🔐 Login attempt with:', credentials);
+    try {
+      const response = await api.post<AuthResponse>('/auth/login', credentials);
+      console.log('✅ Login response:', response.data);
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
+      console.log('✅ User set:', user);
+    } catch (error) {
+      console.error('❌ Login error:', error);
+      throw error;
+    }
   };
 
   const signup = async (data: SignupData) => {

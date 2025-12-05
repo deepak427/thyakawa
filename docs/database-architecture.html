@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Architecture</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .header p { opacity: 0.9; }
+    .content { padding: 2rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .stat-card h3 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .stat-card p { opacity: 0.9; }
+    .models {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    .model-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .model-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+      border-color: #667eea;
+    }
+    .model-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    .model-body { padding: 1rem; }
+    .field {
+      padding: 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .field:last-child { border-bottom: none; }
+    .field-name { font-weight: 500; color: #2d3748; }
+    .field-type {
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      color: #667eea;
+      background: #f7fafc;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+    .badge-required { background: #fed7d7; color: #c53030; }
+    .badge-unique { background: #c6f6d5; color: #22543d; }
+    .badge-relation { background: #bee3f8; color: #2c5282; }
+    .download-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s;
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(102, 126, 234, 0.5);
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .download-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🗄️ Database Architecture</h1>
+      <p>Generated: 5/12/2025, 1:12:58 pm</p>
+    </div>
+    <div class="content">
+      <div class="stats">
+        <div class="stat-card">
+          <h3>10</h3>
+          <p>Total Tables</p>
+        </div>
+        <div class="stat-card">
+          <h3>74</h3>
+          <p>Total Fields</p>
+        </div>
+        <div class="stat-card">
+          <h3>0</h3>
+          <p>Relationships</p>
+        </div>
+      </div>
+      <div class="models">
+        <div class="model-card">
+          <div class="model-header">User</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">name</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">email</span>
+                
+                <span class="badge badge-unique">Unique</span>
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">phone</span>
+                <span class="badge badge-required">Required</span>
+                <span class="badge badge-unique">Unique</span>
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">passwordHash</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">role</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Role</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">referralCode</span>
+                
+                <span class="badge badge-unique">Unique</span>
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">referredBy</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">otpCodeHash</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">otpExpiresAt</span>
+                
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">createdAt</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Address</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">userId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">address</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">lat</span>
+                
+                
+                
+              </div>
+              <span class="field-type">Float</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">lng</span>
+                
+                
+                
+              </div>
+              <span class="field-type">Float</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Transaction</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">userId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">type</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">coins</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Int</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">description</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">createdAt</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Wallet</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">userId</span>
+                <span class="badge badge-required">Required</span>
+                <span class="badge badge-unique">Unique</span>
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">coins</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Int</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Service</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">name</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">baseCoins</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Int</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Center</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">name</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">address</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">coverageKm</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Float</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">lat</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Float</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">lng</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Float</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Timeslot</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">centerId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">startTime</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">endTime</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Trip</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">deliveryPersonId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">status</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">TripStatus</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">scheduledDate</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">startTime</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">endTime</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">createdAt</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">updatedAt</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">Order</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">userId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">addressId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">centerId</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">timeslotId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">pickupDate</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">tripId</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">status</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">OrderStatus</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">deliveryType</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DeliveryType</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">deliveryChargeCoins</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Int</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">estimatedDeliveryTime</span>
+                
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">totalCoins</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Int</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">paymentMethod</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">alternatePhone</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">cancellationReason</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">pickupFailureReason</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">pickupOtpHash</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">pickupOtpExpiresAt</span>
+                
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">deliveryOtpHash</span>
+                
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">deliveryOtpExpiresAt</span>
+                
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">createdAt</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">updatedAt</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">DateTime</span>
+            </div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div class="model-header">OrderItem</div>
+          <div class="model-body">
+            <div class="field">
+              <div>
+                <span class="field-name">id</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">orderId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">serviceId</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">name</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">String</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">quantity</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Int</span>
+            </div>
+            <div class="field">
+              <div>
+                <span class="field-name">coins</span>
+                <span class="badge badge-required">Required</span>
+                
+                
+              </div>
+              <span class="field-type">Int</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="download-btn" onclick="window.print()">📥 Download PDF</button>
+</body>
+</html>

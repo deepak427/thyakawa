@@ -235,14 +235,14 @@ const CenterDashboard: React.FC = () => {
                               {item.name} × {item.quantity}
                             </span>
                             <span className="text-secondary-900 font-medium">
-                              {formatCurrency(item.priceCents * item.quantity)}
+                              {formatCurrency(item.coins * item.quantity)}
                             </span>
                           </div>
                         ))}
                       </div>
                       <div className="flex justify-between text-sm font-bold mt-2 pt-2 border-t border-secondary-200">
                         <span className="text-secondary-700">Total</span>
-                        <span className="text-primary-600">{formatCurrency(order.totalCents)}</span>
+                        <span className="text-primary-600">{formatCurrency(order.totalCoins)}</span>
                       </div>
                     </div>
                   </div>

@@ -334,7 +334,7 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Database Schema Viewer */}
-      <DatabaseSchemaViewer tables={['User', 'AuthOTP']} />
+      <DatabaseSchemaViewer tables={['User']} />
     </div>
   );
 };

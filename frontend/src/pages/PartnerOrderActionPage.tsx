@@ -238,14 +238,14 @@ const PartnerOrderActionPage: React.FC = () => {
             </div>
             <div>
               <p className="text-sm text-gray-600">Total Amount</p>
-              <p className="font-medium text-lg">{formatCurrency(order.totalCents)}</p>
+              <p className="font-medium text-lg">{formatCurrency(order.totalCoins)}</p>
             </div>
             {order.address && (
               <div className="md:col-span-2">
                 <p className="text-sm text-gray-600">Delivery Address</p>
-                <p className="font-medium">{order.address.line1}</p>
+                <p className="font-medium">{order.address}</p>
                 <p className="text-sm text-gray-600">
-                  {order.address.city}, {order.address.pincode}
+                  {order.address}, {order.address.pincode}
                 </p>
               </div>
             )}
@@ -276,7 +276,7 @@ const PartnerOrderActionPage: React.FC = () => {
                   <p className="font-medium text-gray-900">{item.name}</p>
                   <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                 </div>
-                <p className="font-semibold">{formatCurrency(item.priceCents * item.quantity)}</p>
+                <p className="font-semibold">{formatCurrency(item.coins * item.quantity)}</p>
               </div>
             ))}
           </div>

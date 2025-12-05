@@ -105,7 +105,7 @@ const DeliveryPersonDashboard: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                     <span className="font-medium">
-                      {(trip.pickupOrders?.length || 0) + (trip.deliveryOrders?.length || 0)} Orders
+                      {(trip.orders?.length || 0) + (trip.orders?.length || 0)} Orders
                     </span>
                   </div>
                 </div>

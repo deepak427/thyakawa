@@ -13,15 +13,15 @@ interface Trip {
   scheduledDate: string;
   startTime: string;
   endTime: string;
-  pickupOrders?: any[];
-  deliveryOrders?: any[];
+  orders?: any[];
+  orders?: any[];
 }
 
 interface Order {
   id: string;
   user: { name: string; phone: string };
   address: { line1: string; city: string };
-  totalCents: number;
+  totalCoins: number;
   deliveryType: string;
   createdAt: string;
 }
@@ -46,7 +46,7 @@ const FloorManagerTripsPage: React.FC = () => {
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
   
   // Create trip form
-  const [tripType, setTripType] = useState<'PICKUP' | 'DELIVERY'>('PICKUP');
+  const [TripStatus, setTripStatus] = useState<'PICKUP' | 'DELIVERY'>('PICKUP');
   const [deliveryPersonId, setDeliveryPersonId] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
@@ -119,9 +119,9 @@ const FloorManagerTripsPage: React.FC = () => {
         startTime,
         endTime,
         orderIds: selectedOrderIds,
-        type: tripType,
+        type: TripStatus,
       });
-      showToast(`${tripType} trip created with ${selectedOrderIds.length} orders`, 'success');
+      showToast(`${TripStatus} trip created with ${selectedOrderIds.length} orders`, 'success');
       setShowCreateModal(false);
       resetForm();
       fetchTrips();
@@ -134,7 +134,7 @@ const FloorManagerTripsPage: React.FC = () => {
   };
 
   const resetForm = () => {
-    setTripType('PICKUP');
+    setTripStatus('PICKUP');
     setDeliveryPersonId('');
     setScheduledDate('');
     setStartTime('09:00');
@@ -263,7 +263,7 @@ const FloorManagerTripsPage: React.FC = () => {
                             {trip.type === 'PICKUP' ? '📦 Pickup' : '🚚 Delivery'}
                           </span>
                           <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-bold">
-                            {(trip.pickupOrders?.length || 0) + (trip.deliveryOrders?.length || 0)} orders
+                            {(trip.orders?.length || 0) + (trip.orders?.length || 0)} orders
                           </span>
                         </div>
                       </td>
@@ -300,8 +300,8 @@ const FloorManagerTripsPage: React.FC = () => {
                     Trip Type *
                   </label>
                   <select
-                    value={tripType}
-                    onChange={(e) => setTripType(e.target.value as 'PICKUP' | 'DELIVERY')}
+                    value={TripStatus}
+                    onChange={(e) => setTripStatus(e.target.value as 'PICKUP' | 'DELIVERY')}
                     className="input-field"
                     required
                   >
@@ -400,12 +400,12 @@ const FloorManagerTripsPage: React.FC = () => {
                                   {order.user.name} - {order.user.phone}
                                 </p>
                                 <p className="text-xs text-secondary-500 mt-1">
-                                  {order.address.line1}, {order.address.city}
+                                  {order.address}, {order.address}
                                 </p>
                               </div>
                               <div className="text-right">
                                 <p className="text-sm font-bold text-secondary-900">
-                                  {formatCurrency(order.totalCents)}
+                                  {formatCurrency(order.totalCoins)}
                                 </p>
                                 <p className="text-xs text-secondary-500 mt-1">
                                   {order.deliveryType === 'PREMIUM' ? '⚡ Premium' : '🕐 Standard'}

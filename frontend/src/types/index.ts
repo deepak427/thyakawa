@@ -13,10 +13,7 @@ export enum TripStatus {
   CANCELLED = 'CANCELLED',
 }
 
-export enum TripType {
-  PICKUP = 'PICKUP',
-  DELIVERY = 'DELIVERY',
-}
+
 
 export enum OrderStatus {
   PLACED = 'PLACED',
@@ -66,43 +63,35 @@ export interface SignupData {
   password: string;
 }
 
-export interface OrderLog {
-  id: string;
-  fromStatus: string | null;
-  toStatus: string;
-  actorRole: Role;
-  createdAt: string;
-}
 
-export interface Address {
-  id: string;
-  label: string;
-  line1: string;
-  city: string;
-  pincode: string;
-  lat?: number;
-  lng?: number;
-}
+
+
 
 export interface Wallet {
   id: string;
-  balanceCents: number;
+  coins: number;
 }
 
 export interface Service {
   id: string;
   name: string;
-  basePriceCents: number;
+  baseCoins: number;
+}
+
+export interface Center {
+  id: string;
+  name: string;
+  address: string;
+  coverageKm: number;
+  lat: number;
+  lng: number;
 }
 
 export interface Timeslot {
   id: string;
   centerId: string;
-  date: string;
   startTime: string;
   endTime: string;
-  capacity: number;
-  remainingCapacity: number;
 }
 
 export interface OrderItem {
@@ -110,21 +99,27 @@ export interface OrderItem {
   serviceId: string;
   name: string;
   quantity: number;
-  priceCents: number;
+  coins: number;
 }
 
 export interface Trip {
   id: string;
   deliveryPersonId: string;
-  type: TripType;
   status: TripStatus;
   scheduledDate: string;
   startTime: string;
   endTime: string;
   createdAt: string;
   updatedAt: string;
-  pickupOrders?: Order[];
-  deliveryOrders?: Order[];
+  orders?: Order[];
+}
+
+export interface Address {
+  id: string;
+  userId: string;
+  address: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface Order {
@@ -133,23 +128,21 @@ export interface Order {
   addressId: string;
   centerId?: string;
   timeslotId: string;
-  pickupTripId?: string;
-  deliveryTripId?: string;
-  pickupTrip?: Trip;
-  deliveryTrip?: Trip;
+  pickupDate: string;
+  tripId?: string;
+  trip?: Trip;
   status: OrderStatus;
   deliveryType: DeliveryType;
-  deliveryChargeCents: number;
+  deliveryChargeCoins: number;
   estimatedDeliveryTime?: string;
-  totalCents: number;
+  totalCoins: number;
   paymentMethod: string;
+  alternatePhone?: string;
   cancellationReason?: string;
   pickupFailureReason?: string;
-  pickupTimeSlot?: string;
   createdAt: string;
   updatedAt: string;
   items?: OrderItem[];
-  logs?: OrderLog[];
   address?: Address;
   timeslot?: Timeslot;
   user?: {

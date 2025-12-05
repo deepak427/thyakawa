@@ -8,7 +8,7 @@ import api from '../services/api';
 interface Transaction {
   id: string;
   type: string;
-  amountCents: number;
+  coins: number;
   description: string;
   createdAt: string;
 }
@@ -149,7 +149,7 @@ const TransactionHistoryPage: React.FC = () => {
                       }`}
                     >
                       {transaction.type === 'ORDER_PAYMENT' ? '-' : '+'}
-                      {formatCurrency(Math.abs(transaction.amountCents))}
+                      {formatCurrency(Math.abs(transaction.coins))}
                     </p>
                   </div>
                 </div>

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Role } from '../types';
 import { DatabaseSchemaViewer } from './DatabaseSchemaViewer';
 import { Logo } from './Logo';
-import { PAGE_SCHEMAS } from '../data/schemaData';
+import { SCHEMA_DATA } from '../data/schemaData';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -98,44 +98,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      {/* Database Schema Viewer */}
-      <DatabaseSchemaViewer tables={getPageSchemas(location.pathname)} />
+      {/* Database Schema Viewer - Shows ALL tables */}
+      <DatabaseSchemaViewer tables={Object.keys(SCHEMA_DATA)} />
     </div>
   );
 };
-
-// Helper function to get schemas for current page
-function getPageSchemas(pathname: string): string[] {
-  // Auth pages
-  if (pathname === '/login') return PAGE_SCHEMAS['login'];
-  if (pathname === '/signup') return PAGE_SCHEMAS['signup'];
-  
-  // Map pathname to schema key
-  if (pathname.includes('/user/dashboard')) return PAGE_SCHEMAS['user-dashboard'];
-  if (pathname.includes('/user/orders/new')) return PAGE_SCHEMAS['create-order'];
-  if (pathname.includes('/user/orders/')) return PAGE_SCHEMAS['order-detail'];
-  if (pathname.includes('/user/wallet')) return PAGE_SCHEMAS['wallet'];
-  if (pathname.includes('/user/addresses')) return PAGE_SCHEMAS['addresses'];
-  if (pathname.includes('/user/referral')) return PAGE_SCHEMAS['referral'];
-  
-  if (pathname.includes('/delivery/dashboard')) return PAGE_SCHEMAS['delivery-dashboard'];
-  if (pathname.includes('/delivery/trips/')) return PAGE_SCHEMAS['delivery-trip'];
-  
-  if (pathname.includes('/manager/dashboard')) return PAGE_SCHEMAS['manager-dashboard'];
-  if (pathname.includes('/manager/orders')) return PAGE_SCHEMAS['manager-orders'];
-  if (pathname.includes('/manager/trips/') && pathname.split('/').length > 3) return PAGE_SCHEMAS['manager-trip-detail'];
-  if (pathname.includes('/manager/trips')) return PAGE_SCHEMAS['manager-trips'];
-  if (pathname.includes('/manager/delivery-partners')) return PAGE_SCHEMAS['manager-partners'];
-  
-  if (pathname.includes('/operator/dashboard')) return PAGE_SCHEMAS['operator-dashboard'];
-  
-  if (pathname.includes('/admin/dashboard')) return PAGE_SCHEMAS['admin-dashboard'];
-  if (pathname.includes('/admin/timeslots')) return PAGE_SCHEMAS['admin-timeslots'];
-  if (pathname.includes('/admin/services')) return PAGE_SCHEMAS['admin-services'];
-  if (pathname.includes('/admin/centers')) return PAGE_SCHEMAS['admin-centers'];
-  if (pathname.includes('/admin/payouts')) return PAGE_SCHEMAS['admin-payouts'];
-  
-  return [];
-}
 
 export default Layout;
