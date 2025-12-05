@@ -13,7 +13,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const { addressId, centerId, timeslotId, deliveryType, items } = req.body;
+    const { addressId, centerId, timeslotId, deliveryType, alternatePhone, items } = req.body;
 
     // Validate required fields
     if (!addressId || !timeslotId || !items || !Array.isArray(items) || items.length === 0) {
@@ -80,7 +80,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       STANDARD: 0,
       PREMIUM: 5000, // ₹50
     };
-    const deliveryChargeCents = DELIVERY_CHARGES[selectedDeliveryType as keyof typeof DELIVERY_CHARGES];
+    const deliveryChargeCoins = DELIVERY_CHARGES[selectedDeliveryType as keyof typeof DELIVERY_CHARGES];
 
     // Calculate estimated delivery time
     const now = new Date();
@@ -88,23 +88,23 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
     const estimatedDeliveryTime = new Date(now.getTime() + deliveryHours * 60 * 60 * 1000);
 
     // Calculate total price
-    let subtotalCents = 0;
+    let subtotalCoins = 0;
     const orderItemsData = items.map(item => {
       const service = services.find((s: any) => s.id === item.serviceId);
       if (!service) {
         throw new Error('Service not found');
       }
-      const itemTotal = service.basePriceCents * item.quantity;
-      subtotalCents += itemTotal;
+      const itemTotal = service.basecoins * item.quantity;
+      subtotalCoins += itemTotal;
       return {
         serviceId: item.serviceId,
         name: service.name,
         quantity: item.quantity,
-        priceCents: service.basePriceCents,
+        coins: service.basecoins,
       };
     });
 
-    const totalCents = subtotalCents + deliveryChargeCents;
+    const totalCoins = subtotalCoins + deliveryChargeCoins;
 
     // Check wallet balance
     const wallet = await prisma.wallet.findUnique({
@@ -116,11 +116,11 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    if (wallet.balanceCents < totalCents) {
+    if (wallet.coins < totalCoins) {
       res.status(400).json({
         error: 'Insufficient wallet balance',
-        required: totalCents,
-        available: wallet.balanceCents,
+        required: totalCoins,
+        available: wallet.coins,
       });
       return;
     }
@@ -133,7 +133,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
     await prisma.wallet.update({
       where: { userId },
       data: {
-        balanceCents: wallet.balanceCents - totalCents,
+        coins: wallet.coins - totalCoins,
       },
     });
 
@@ -154,10 +154,11 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
         timeslotId,
         status: OrderStatus.PLACED,
         deliveryType: selectedDeliveryType,
-        deliveryChargeCents,
+        deliveryChargeCoins,
         estimatedDeliveryTime,
-        totalCents,
+        totalCoins,
         paymentMethod: 'WALLET',
+        alternatePhone: alternatePhone || null,
         items: {
           create: orderItemsData,
         },
@@ -169,7 +170,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
       data: {
         userId,
         type: 'ORDER_PAYMENT',
-        amountCents: -totalCents,
+        coins: -totalCoins,
         description: `Payment for order #${order.id.slice(0, 8)}`,
       },
     });
@@ -347,8 +348,8 @@ export async function updateOrder(req: Request, res: Response): Promise<void> {
     }
 
     // Calculate new total if items changed
-    let newTotalCents = existingOrder.totalCents;
-    let newOrderItemsData: Array<{ serviceId: string; name: string; quantity: number; priceCents: number }> = [];
+    let newtotalCoins = existingOrder.totalCoins;
+    let newOrderItemsData: Array<{ serviceId: string; name: string; quantity: number; coins: number }> = [];
 
     if (items && Array.isArray(items)) {
       const serviceIds = items.map(item => item.serviceId);
@@ -356,27 +357,27 @@ export async function updateOrder(req: Request, res: Response): Promise<void> {
         where: { id: { in: serviceIds } },
       });
 
-      let subtotalCents = 0;
+      let subtotalCoins = 0;
       newOrderItemsData = items.map(item => {
         const service = services.find((s: any) => s.id === item.serviceId);
         if (!service) throw new Error('Service not found');
-        const itemTotal = service.basePriceCents * item.quantity;
-        subtotalCents += itemTotal;
+        const itemTotal = service.basecoins * item.quantity;
+        subtotalCoins += itemTotal;
         return {
           serviceId: item.serviceId,
           name: service.name,
           quantity: item.quantity,
-          priceCents: service.basePriceCents,
+          coins: service.basecoins,
         };
       });
 
       const DELIVERY_CHARGES = { STANDARD: 0, PREMIUM: 5000 };
       const deliveryCharge = DELIVERY_CHARGES[(deliveryType || existingOrder.deliveryType) as keyof typeof DELIVERY_CHARGES];
-      newTotalCents = subtotalCents + deliveryCharge;
+      newtotalCoins = subtotalCoins + deliveryCharge;
     }
 
     // Calculate refund/charge difference
-    const priceDifference = newTotalCents - existingOrder.totalCents;
+    const priceDifference = newtotalCoins - existingOrder.totalCoins;
 
     // Get wallet
     const wallet = await prisma.wallet.findUnique({
@@ -389,7 +390,7 @@ export async function updateOrder(req: Request, res: Response): Promise<void> {
     }
 
     // Check if user has enough balance for price increase
-    if (priceDifference > 0 && wallet.balanceCents < priceDifference) {
+    if (priceDifference > 0 && wallet.coins < priceDifference) {
       res.status(400).json({ error: 'Insufficient wallet balance for update' });
       return;
     }
@@ -401,7 +402,7 @@ export async function updateOrder(req: Request, res: Response): Promise<void> {
     if (priceDifference !== 0) {
       await prisma.wallet.update({
         where: { userId },
-        data: { balanceCents: wallet.balanceCents - priceDifference },
+        data: { coins: wallet.coins - priceDifference },
       });
 
       // Create transaction record
@@ -409,7 +410,7 @@ export async function updateOrder(req: Request, res: Response): Promise<void> {
         data: {
           userId,
           type: priceDifference > 0 ? 'ORDER_PAYMENT' : 'REFUND',
-          amountCents: priceDifference,
+          coins: priceDifference,
           description: `Order update ${priceDifference > 0 ? 'charge' : 'refund'} for #${orderId.slice(0, 8)}`,
         },
       });
@@ -430,10 +431,10 @@ export async function updateOrder(req: Request, res: Response): Promise<void> {
         ...(timeslotId && { timeslotId }),
         ...(deliveryType && {
           deliveryType,
-          deliveryChargeCents: deliveryType === 'PREMIUM' ? 5000 : 0,
+          deliveryChargeCoins: deliveryType === 'PREMIUM' ? 5000 : 0,
           estimatedDeliveryTime: new Date(Date.now() + (deliveryType === 'PREMIUM' ? 24 : 48) * 60 * 60 * 1000),
         }),
-        totalCents: newTotalCents,
+        totalCoins: newtotalCoins,
         ...(items && {
           items: {
             create: newOrderItemsData,
@@ -512,7 +513,7 @@ export async function cancelOrder(req: Request, res: Response): Promise<void> {
     await prisma.wallet.update({
       where: { userId: order.userId },
       data: {
-        balanceCents: wallet.balanceCents + order.totalCents,
+        coins: wallet.coins + order.totalCoins,
       },
     });
 
@@ -538,7 +539,7 @@ export async function cancelOrder(req: Request, res: Response): Promise<void> {
       data: {
         userId: order.userId,
         type: 'REFUND',
-        amountCents: order.totalCents,
+        coins: order.totalCoins,
         description: `Refund for cancelled order #${id.slice(0, 8)}`,
       },
     });
@@ -558,7 +559,7 @@ export async function cancelOrder(req: Request, res: Response): Promise<void> {
     res.json({
       message: 'Order cancelled successfully',
       order: result,
-      refundedAmount: order.totalCents,
+      refundedAmount: order.totalCoins,
     });
   } catch (error) {
     console.error('Cancel order error:', error);

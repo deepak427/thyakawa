@@ -24,14 +24,14 @@ export async function getTransactions(req: Request, res: Response): Promise<void
 export async function createTransaction(
   userId: string,
   type: string,
-  amountCents: number,
+  coins: number,
   description: string
 ): Promise<void> {
   await prisma.transaction.create({
     data: {
       userId,
       type,
-      amountCents,
+      coins,
       description,
     },
   });

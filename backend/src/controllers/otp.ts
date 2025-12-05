@@ -120,7 +120,7 @@ export async function verifyOTP(req: Request, res: Response): Promise<void> {
           referredBy: referrerId,
           wallet: {
             create: {
-              balanceCents: initialBalance,
+              coins: initialBalance,
             },
           },
         },
@@ -132,7 +132,7 @@ export async function verifyOTP(req: Request, res: Response): Promise<void> {
           data: {
             userId: user.id,
             type: 'REFERRAL_BONUS',
-            amountCents: initialBalance,
+            coins: initialBalance,
             description: 'Welcome bonus for using referral code',
           },
         });

@@ -38,7 +38,7 @@ export async function getReferralStats(req: Request, res: Response): Promise<voi
       });
     }
 
-    const totalEarned = user.transactions.reduce((sum, t) => sum + t.amountCents, 0);
+    const totalEarned = user.transactions.reduce((sum, t) => sum + t.coins, 0);
 
     res.json({
       stats: {

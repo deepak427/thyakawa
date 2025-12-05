@@ -41,10 +41,10 @@ export async function topupWallet(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const { amountCents } = req.body;
+    const { coins } = req.body;
 
     // Validate amount
-    if (!amountCents || typeof amountCents !== 'number' || amountCents <= 0) {
+    if (!coins || typeof coins !== 'number' || coins <= 0) {
       res.status(400).json({ error: 'Invalid amount: must be a positive number in cents' });
       return;
     }
@@ -67,7 +67,7 @@ export async function topupWallet(req: Request, res: Response): Promise<void> {
         userId: req.user.userId,
       },
       data: {
-        balanceCents: wallet.balanceCents + amountCents,
+        coins: wallet.coins + coins,
       },
     });
 
@@ -75,8 +75,8 @@ export async function topupWallet(req: Request, res: Response): Promise<void> {
       data: {
         userId: req.user.userId,
         type: 'TOPUP',
-        amountCents,
-        description: `Added ₹${(amountCents / 100).toFixed(2)} to wallet`,
+        coins,
+        description: `Added ₹${(coins / 100).toFixed(2)} to wallet`,
       },
     });
 

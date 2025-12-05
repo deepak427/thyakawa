@@ -411,9 +411,9 @@ export async function getServices(req: Request, res: Response): Promise<void> {
 // POST /api/admin/services
 export async function createService(req: Request, res: Response): Promise<void> {
   try {
-    const { name, basePriceCents } = req.body;
+    const { name, basecoins } = req.body;
 
-    if (!name || basePriceCents === undefined) {
+    if (!name || basecoins === undefined) {
       res.status(400).json({ error: 'Name and base price are required' });
       return;
     }
@@ -421,7 +421,7 @@ export async function createService(req: Request, res: Response): Promise<void> 
     const service = await prisma.service.create({
       data: {
         name,
-        basePriceCents,
+        basecoins,
       },
     });
 
@@ -436,11 +436,11 @@ export async function createService(req: Request, res: Response): Promise<void> 
 export async function updateService(req: Request, res: Response): Promise<void> {
   try {
     const { id } = req.params;
-    const { name, basePriceCents } = req.body;
+    const { name, basecoins } = req.body;
 
     const data: any = {};
     if (name !== undefined) data.name = name;
-    if (basePriceCents !== undefined) data.basePriceCents = basePriceCents;
+    if (basecoins !== undefined) data.basecoins = basecoins;
 
     const service = await prisma.service.update({
       where: { id },
@@ -536,9 +536,9 @@ export async function getPayouts(req: Request, res: Response): Promise<void> {
 // POST /api/admin/payouts
 export async function createPayout(req: Request, res: Response): Promise<void> {
   try {
-    const { partnerId, orderId, amountCents } = req.body;
+    const { partnerId, orderId, coins } = req.body;
 
-    if (!partnerId || !orderId || amountCents === undefined) {
+    if (!partnerId || !orderId || coins === undefined) {
       res.status(400).json({ error: 'Partner ID, order ID, and amount are required' });
       return;
     }
@@ -567,7 +567,7 @@ export async function createPayout(req: Request, res: Response): Promise<void> {
       data: {
         deliveryPersonId: partnerId,
         orderId,
-        amountCents,
+        coins,
         status: 'PENDING',
       },
       include: {

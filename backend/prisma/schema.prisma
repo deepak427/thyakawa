@@ -25,10 +25,7 @@ enum TripStatus {
   CANCELLED
 }
 
-enum TripType {
-  PICKUP
-  DELIVERY
-}
+
 
 enum OrderStatus {
   PLACED
@@ -53,199 +50,117 @@ enum DeliveryType {
   PREMIUM
 }
 
-enum PayoutStatus {
-  PENDING
-  COMPLETED
-}
+
 
 // Models
 model User {
-  id            String    @id @default(uuid())
-  name          String
-  email         String?   @unique
-  phone         String    @unique
-  passwordHash  String?
-  role          Role      @default(USER)
-  referralCode  String?   @unique
-  referredBy    String?
-  referrer      User?     @relation("Referrals", fields: [referredBy], references: [id], onDelete: SetNull)
-  referrals     User[]    @relation("Referrals")
-  createdAt     DateTime  @default(now())
-  addresses     Address[]
-  wallet        Wallet?
-  orders        Order[]
-  authOtps      AuthOTP[]
-  transactions  Transaction[]
+  id           String    @id @default(uuid())
+  name         String
+  email        String?   @unique
+  phone        String    @unique
+  passwordHash String?
+  role         Role      @default(USER)
+  referralCode String?   @unique
+  referredBy   String?
+  otpCodeHash  String?
+  otpExpiresAt DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model Address {
+  id      String @id @default(uuid())
+  userId  String
+  address String
+  lat     Float?
+  lng     Float?
 }
 
 model Transaction {
   id          String   @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
   type        String
-  amountCents Int
+  coins       Int
   description String
   createdAt   DateTime @default(now())
 
   @@index([userId, createdAt])
 }
 
-model AuthOTP {
-  id         String    @id @default(uuid())
-  phone      String
-  codeHash   String
-  expiresAt  DateTime
-  verifiedAt DateTime?
-  userId     String?
-  user       User?     @relation(fields: [userId], references: [id])
-  createdAt  DateTime  @default(now())
 
-  @@index([phone, expiresAt])
-}
 
-model Address {
-  id      String  @id @default(uuid())
-  userId  String
-  user    User    @relation(fields: [userId], references: [id])
-  label   String
-  line1   String
-  city    String
-  pincode String
-  lat     Float?
-  lng     Float?
-  orders  Order[]
-}
+
 
 model Wallet {
-  id           String @id @default(uuid())
-  userId       String @unique
-  user         User   @relation(fields: [userId], references: [id])
-  balanceCents Int    @default(0)
+  id      String @id @default(uuid())
+  userId  String @unique
+  coins   Int    @default(0)
 }
 
 model Service {
-  id             String      @id @default(uuid())
-  name           String
-  basePriceCents Int
-  orderItems     OrderItem[]
+  id        String @id @default(uuid())
+  name      String
+  baseCoins Int
 }
 
 model Center {
-  id        String     @id @default(uuid())
-  name      String
-  address   String
-  timeslots Timeslot[]
-  orders    Order[]
+  id           String @id @default(uuid())
+  name         String
+  address      String
+  coverageKm   Float
+  lat          Float
+  lng          Float
 }
 
 model Timeslot {
-  id                String   @id @default(uuid())
-  centerId          String
-  center            Center   @relation(fields: [centerId], references: [id])
-  date              DateTime
-  startTime         String
-  endTime           String
-  capacity          Int
-  remainingCapacity Int
-  orders            Order[]
+  id        String @id @default(uuid())
+  centerId  String
+  startTime String
+  endTime   String
 }
 
 model Trip {
-  id                 String     @id @default(uuid())
-  deliveryPersonId   String
-  type               TripType
-  status             TripStatus @default(PENDING)
-  scheduledDate      DateTime
-  startTime          String
-  endTime            String
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
-  pickupOrders       Order[]    @relation("PickupTrip")
-  deliveryOrders     Order[]    @relation("DeliveryTrip")
+  id               String     @id @default(uuid())
+  deliveryPersonId String
+  status           TripStatus @default(PENDING)
+  scheduledDate    DateTime
+  startTime        String
+  endTime          String
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 }
 
 model Order {
   id                    String       @id @default(uuid())
   userId                String
-  user                  User         @relation(fields: [userId], references: [id])
   addressId             String
-  address               Address      @relation(fields: [addressId], references: [id])
   centerId              String?
-  center                Center?      @relation(fields: [centerId], references: [id])
   timeslotId            String
-  timeslot              Timeslot     @relation(fields: [timeslotId], references: [id])
-  pickupTripId          String?
-  pickupTrip            Trip?        @relation("PickupTrip", fields: [pickupTripId], references: [id])
-  deliveryTripId        String?
-  deliveryTrip          Trip?        @relation("DeliveryTrip", fields: [deliveryTripId], references: [id])
+  pickupDate            DateTime
+  tripId                String?
   status                OrderStatus  @default(PLACED)
   deliveryType          DeliveryType @default(STANDARD)
-  deliveryChargeCents   Int          @default(0)
+  deliveryChargeCoins   Int          @default(0)
   estimatedDeliveryTime DateTime?
-  totalCents            Int
+  totalCoins            Int
   paymentMethod         String       @default("WALLET")
+  alternatePhone        String?
   cancellationReason    String?
   pickupFailureReason   String?
-  pickupTimeSlot        String?
+  pickupOtpHash         String?
+  pickupOtpExpiresAt    DateTime?
+  deliveryOtpHash       String?
+  deliveryOtpExpiresAt  DateTime?
   createdAt             DateTime     @default(now())
   updatedAt             DateTime     @updatedAt
-  items                 OrderItem[]
-  logs                  OrderLog[]
-  photos                Photo[]
-  otps                  OTP[]
-  payouts               Payout[]
 }
 
 model OrderItem {
-  id         String  @id @default(uuid())
-  orderId    String
-  order      Order   @relation(fields: [orderId], references: [id])
-  serviceId  String
-  service    Service @relation(fields: [serviceId], references: [id])
-  name       String
-  quantity   Int
-  priceCents Int
+  id        String @id @default(uuid())
+  orderId   String
+  serviceId String
+  name      String
+  quantity  Int
+  coins     Int
 }
 
-model OrderLog {
-  id         String   @id @default(uuid())
-  orderId    String
-  order      Order    @relation(fields: [orderId], references: [id])
-  fromStatus String?
-  toStatus   String
-  actorId    String
-  actorRole  Role
-  metadata   Json?
-  createdAt  DateTime @default(now())
-}
 
-model Photo {
-  id             String   @id @default(uuid())
-  orderId        String
-  order          Order    @relation(fields: [orderId], references: [id])
-  uploadedByRole Role
-  type           String
-  path           String
-  createdAt      DateTime @default(now())
-}
-
-model OTP {
-  id         String    @id @default(uuid())
-  orderId    String
-  order      Order     @relation(fields: [orderId], references: [id])
-  codeHash   String
-  action     String
-  expiresAt  DateTime
-  verifiedAt DateTime?
-  createdAt  DateTime  @default(now())
-}
-
-model Payout {
-  id                 String       @id @default(uuid())
-  deliveryPersonId   String
-  orderId            String
-  order              Order        @relation(fields: [orderId], references: [id])
-  amountCents        Int
-  status             PayoutStatus @default(PENDING)
-  createdAt          DateTime     @default(now())
-}

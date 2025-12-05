@@ -23,7 +23,8 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   process.env.CORS_ORIGIN,
   'https://ironing-service.vercel.app',
-  'http://localhost:5173'
+  'http://localhost:5173',
+  'http://localhost:5174'
 ].filter(Boolean);
 
 console.log('Allowed CORS origins:', allowedOrigins);

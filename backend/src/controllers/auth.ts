@@ -41,7 +41,7 @@ export async function signup(req: Request, res: Response): Promise<void> {
         role: role || 'USER',
         wallet: {
           create: {
-            balanceCents: 0,
+            coins: 0,
           },
         },
       },

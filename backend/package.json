@@ -9,7 +9,8 @@
     "vercel-build": "echo 'Vercel build: generating Prisma client' && prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "tsx prisma/seed.ts",
+    "db:docs": "tsx scripts/generate-db-docs.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

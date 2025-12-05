@@ -7,9 +7,6 @@ async function main() {
   console.log('🧹 Cleaning database...');
   
   // Delete all data in correct order (respecting foreign keys)
-  await prisma.oTP.deleteMany();
-  await prisma.authOTP.deleteMany();
-  await prisma.payout.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.trip.deleteMany();
@@ -88,30 +85,38 @@ async function main() {
       passwordHash,
       role: Role.USER,
       referralCode: 'CUST001',
-      wallet: {
-        create: {
-          balanceCents: 100000, // ₹1000
-        },
-      },
-      addresses: {
-        create: {
-          label: 'Home',
-          line1: '123 Test Street, Apt 4B',
-          city: 'Mumbai',
-          pincode: '400001',
-          lat: 19.0760,
-          lng: 72.8777,
-        },
-      },
     },
   });
   console.log('✅ Created Customer:', customer.email);
+
+  // Create wallet for customer
+  await prisma.wallet.create({
+    data: {
+      userId: customer.id,
+      coins: 100000,
+    },
+  });
+  console.log('✅ Created Wallet for customer');
+
+  // Create address for customer
+  await prisma.address.create({
+    data: {
+      userId: customer.id,
+      address: '123 Test Street, Apt 4B, Mumbai 400001',
+      lat: 19.0760,
+      lng: 72.8777,
+    },
+  });
+  console.log('✅ Created Address for customer');
 
   // Create a center for testing
   const center = await prisma.center.create({
     data: {
       name: 'Mumbai Central',
       address: '456 Processing Lane, Mumbai',
+      coverageKm: 10.0,
+      lat: 19.0760,
+      lng: 72.8777,
     },
   });
   console.log('✅ Created Center:', center.name);
@@ -119,10 +124,10 @@ async function main() {
   // Create basic services
   const services = await prisma.service.createMany({
     data: [
-      { name: 'Shirt', basePriceCents: 3000 }, // ₹30
-      { name: 'Trouser', basePriceCents: 4000 }, // ₹40
-      { name: 'Saree', basePriceCents: 6000 }, // ₹60
-      { name: 'Bedsheet', basePriceCents: 5000 }, // ₹50
+      { name: 'Shirt', baseCoins: 3000 }, // ₹30
+      { name: 'Trouser', baseCoins: 4000 }, // ₹40
+      { name: 'Saree', baseCoins: 6000 }, // ₹60
+      { name: 'Bedsheet', baseCoins: 5000 }, // ₹50
     ],
   });
   console.log('✅ Created Services:', services.count);
